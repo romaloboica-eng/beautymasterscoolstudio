@@ -1,0 +1,2391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Beauty Master Studio</title>
+
+    <style>
+        /* ============================================
+           ВСЕ СТИЛИ (сокращено для компактности)
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f5f0ed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 16px;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 400px;
+            height: 780px;
+            background: #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            padding: 28px 22px 22px;
+            overflow-y: auto;
+            background: #ffffff;
+            animation: fadeSlide 0.3s ease;
+            position: relative;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeSlide {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .screen::-webkit-scrollbar { width: 0; }
+        .screen::-webkit-scrollbar-track { display: none; }
+
+        .btn {
+            background: #c89f8a;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(200, 159, 138, 0.3);
+            letter-spacing: 0.3px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #c89f8a;
+            color: #c89f8a;
+            box-shadow: none;
+        }
+
+        .btn-outline:active {
+            background: #f8f0ec;
+        }
+
+        .btn-sm {
+            padding: 10px 18px;
+            font-size: 14px;
+            width: auto;
+            flex: 1;
+        }
+
+        .btn-danger {
+            background: #d4857a;
+            box-shadow: 0 6px 20px rgba(212, 133, 122, 0.3);
+        }
+
+        .btn-success {
+            background: #6abf8a;
+            box-shadow: 0 6px 20px rgba(106, 191, 138, 0.3);
+        }
+
+        .btn-yandex {
+            background: #ffcc00;
+            color: #1a1a1a;
+            box-shadow: 0 6px 20px rgba(255, 204, 0, 0.3);
+        }
+
+        .btn-yandex:active {
+            background: #e6b800;
+        }
+
+        .btn-dgis {
+            background: #00a3e0;
+            color: white;
+            box-shadow: 0 6px 20px rgba(0, 163, 224, 0.3);
+        }
+
+        .btn-dgis:active {
+            background: #0088c4;
+        }
+
+        .input-group {
+            margin: 10px 0;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #5a4a3e;
+            display: block;
+            margin-bottom: 5px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #ede7e2;
+            border-radius: 30px;
+            font-size: 15px;
+            background: #fcf9f7;
+            transition: all 0.2s;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-color: #c89f8a;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(200, 159, 138, 0.1);
+        }
+
+        .input-group textarea {
+            border-radius: 20px;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .card {
+            background: #fcf9f7;
+            border-radius: 24px;
+            padding: 16px 18px;
+            margin: 8px 0;
+            border: 1px solid #ede7e2;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #3d2c1e;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .card-sub {
+            font-size: 14px;
+            color: #8a7a6a;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .flex-row .btn { flex: 1; }
+
+        .text-center { text-align: center; }
+        .text-muted { color: #8a7a6a; font-size: 14px; }
+        .mt-1 { margin-top: 8px; }
+        .mt-2 { margin-top: 16px; }
+        .mt-3 { margin-top: 24px; }
+        .mb-1 { margin-bottom: 8px; }
+        .mb-2 { margin-bottom: 16px; }
+        .hidden { display: none !important; }
+        .w-100 { width: 100%; }
+
+        .badge {
+            background: #c89f8a22;
+            color: #8a6a5a;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #6abf8a22;
+            color: #2d7a4a;
+        }
+
+        .badge-warning {
+            background: #fdf3e0;
+            color: #b8860b;
+        }
+
+        .badge-danger {
+            background: #fde8e5;
+            color: #b84a3a;
+        }
+
+        .back-link {
+            color: #c89f8a;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .back-link::before {
+            content: "← ";
+        }
+
+        #splash {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(145deg, #fcf8f5, #f0e8e2);
+            padding: 40px;
+        }
+
+        #splash .logo-emoji {
+            font-size: 72px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        #splash h1 {
+            font-size: 30px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #3d2c1e;
+        }
+
+        #splash h1 strong {
+            font-weight: 700;
+            color: #c89f8a;
+        }
+
+        #splash .sub {
+            font-size: 14px;
+            color: #8a7a6a;
+            margin-top: 6px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        #roleSelect {
+            justify-content: center;
+            padding: 40px 22px;
+        }
+
+        #roleSelect h2 {
+            font-weight: 300;
+            color: #3d2c1e;
+            font-size: 26px;
+        }
+
+        #roleSelect p {
+            color: #8a7a6a;
+            margin-bottom: 30px;
+        }
+
+        .role-btn {
+            padding: 20px;
+            border-radius: 30px;
+            border: 2px solid #ede7e2;
+            background: #fcf9f7;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            flex: 1;
+        }
+
+        .role-btn:active {
+            transform: scale(0.96);
+            border-color: #c89f8a;
+            background: #f8f0ec;
+        }
+
+        .role-btn .icon {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .role-btn .label {
+            font-weight: 600;
+            color: #3d2c1e;
+        }
+
+        .service-category {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .service-category:active {
+            transform: scale(0.97);
+        }
+
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #ede7e2;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .service-item:last-child { border: none; }
+        .service-item:active { opacity: 0.6; }
+        .service-item.selected {
+            background: #f8f0ec;
+            border-radius: 16px;
+            padding: 14px 16px;
+            border-bottom: none;
+            margin: 4px 0;
+        }
+
+        .service-item .name { font-weight: 500; color: #3d2c1e; }
+        .service-item .price { font-weight: 600; color: #c89f8a; }
+
+        .timer-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 6px solid #c89f8a;
+            border-right-color: #ede7e2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 700;
+            color: #3d2c1e;
+            margin: 16px auto;
+            transition: 0.3s;
+            animation: spin 1s linear infinite;
+        }
+
+        .timer-ring.paused {
+            animation: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .timer-ring .seconds {
+            animation: none;
+            transform: rotate(0deg);
+        }
+
+        .entry-item {
+            background: white;
+            border-radius: 18px;
+            padding: 14px 16px;
+            margin: 8px 0;
+            border-left: 5px solid #c89f8a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .entry-item:active {
+            transform: scale(0.97);
+            opacity: 0.7;
+        }
+
+        .entry-item .entry-title {
+            font-weight: 600;
+            color: #3d2c1e;
+        }
+
+        .entry-item .entry-meta {
+            font-size: 13px;
+            color: #8a7a6a;
+            margin-top: 4px;
+        }
+
+        .entry-item .status-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .status-waiting { background: #fdf3e0; color: #b8860b; }
+        .status-active { background: #e0f2e8; color: #2d7a4a; }
+        .status-completed { background: #e8e8e8; color: #5a5a5a; }
+        .status-declined { background: #fde8e5; color: #b84a3a; }
+        .status-waiting_time { background: #fdf3e0; color: #b8860b; }
+
+        .tab-btn {
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            color: #8a7a6a;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .tab-btn.active {
+            color: #3d2c1e;
+            border-bottom-color: #c89f8a;
+        }
+
+        .tab-btn:active {
+            opacity: 0.6;
+        }
+
+        @media (max-width: 440px) {
+            body { padding: 0; }
+            .app {
+                border-radius: 0;
+                height: 100vh;
+                max-height: 100vh;
+            }
+        }
+
+        .salon-photo {
+            background: linear-gradient(135deg, #e8ddd5, #d5c8be);
+            border-radius: 20px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8a7a6a;
+            font-size: 14px;
+            margin: 8px 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" fill="%23d5c8be" opacity="0.5"/><circle cx="50" cy="50" r="20" fill="%23c89f8a" opacity="0.3"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .loading-spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ede7e2;
+            border-top: 3px solid #c89f8a;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 20px auto;
+        }
+        
+        .error-message {
+            color: #d4857a;
+            font-size: 14px;
+            padding: 10px;
+            background: #fde8e5;
+            border-radius: 12px;
+            margin: 6px 0;
+        }
+        
+        .success-message {
+            color: #2d7a4a;
+            font-size: 14px;
+            padding: 10px;
+            background: #e0f2e8;
+            border-radius: 12px;
+            margin: 6px 0;
+        }
+
+        .master-card {
+            background: white;
+            border-radius: 18px;
+            padding: 14px 16px;
+            margin: 8px 0;
+            border: 2px solid #ede7e2;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .master-card:active {
+            transform: scale(0.97);
+            border-color: #c89f8a;
+        }
+
+        .master-card.selected {
+            border-color: #6abf8a;
+            background: #f0f8f0;
+        }
+
+        .master-card .master-name {
+            font-weight: 600;
+            color: #3d2c1e;
+            font-size: 16px;
+        }
+
+        .master-card .master-category {
+            font-size: 14px;
+            color: #8a7a6a;
+        }
+
+        .master-card .master-rating {
+            color: #f5c842;
+            font-size: 14px;
+        }
+
+        .master-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .master-grid .master-card {
+            margin: 0;
+            text-align: center;
+            padding: 16px 12px;
+        }
+
+        .update-badge {
+            background: #6abf8a22;
+            color: #2d7a4a;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0ece8;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #8a7a6a;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: #3d2c1e;
+            font-weight: 500;
+            font-size: 14px;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .detail-value.master {
+            color: #6abf8a;
+        }
+
+        .detail-value.client {
+            color: #c89f8a;
+        }
+
+        .star-btn {
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .star-btn:active {
+            transform: scale(1.2);
+        }
+
+        .star-btn.active {
+            color: #f5c842;
+        }
+
+        .star-btn.inactive {
+            color: #ddd;
+        }
+
+        .time-option {
+            padding: 12px 16px;
+            border: 2px solid #ede7e2;
+            border-radius: 16px;
+            margin: 6px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .time-option:active {
+            transform: scale(0.97);
+        }
+
+        .time-option.selected {
+            border-color: #6abf8a;
+            background: #f0f8f0;
+        }
+
+        .time-option .time-text {
+            font-weight: 500;
+            color: #3d2c1e;
+        }
+
+        .time-option .time-check {
+            color: #6abf8a;
+            font-weight: 600;
+        }
+
+        .time-option .time-index {
+            color: #8a7a6a;
+            font-size: 12px;
+        }
+
+        .add-time-btn {
+            background: #f0ece8;
+            border: 2px dashed #c89f8a;
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            color: #c89f8a;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin: 6px 0;
+        }
+
+        .add-time-btn:active {
+            transform: scale(0.97);
+            background: #e8e0da;
+        }
+
+        .time-input-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin: 6px 0;
+        }
+
+        .time-input-wrapper input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 16px;
+            border: 2px solid #ede7e2;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .time-input-wrapper input:focus {
+            border-color: #c89f8a;
+        }
+
+        .time-input-wrapper .btn {
+            width: auto;
+            padding: 10px 16px;
+            margin: 0;
+            flex: 0 0 auto;
+        }
+
+        .thanks-icon {
+            font-size: 72px;
+            margin-bottom: 12px;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .status-bar.online {
+            background: #e0f2e8;
+            color: #2d7a4a;
+        }
+
+        .status-bar.offline {
+            background: #fde8e5;
+            color: #b84a3a;
+        }
+
+        .status-bar.sync {
+            background: #fdf3e0;
+            color: #b8860b;
+            animation: pulse 1.5s infinite;
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .sync-dot.online {
+            background: #2d7a4a;
+        }
+
+        .sync-dot.offline {
+            background: #b84a3a;
+        }
+
+        .sync-dot.sync {
+            background: #b8860b;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+    <!-- ==========================================
+    ЭКРАН 1: ЗАСТАВКА (SPLASH)
+    ========================================== -->
+    <div id="splash" class="screen active">
+        <span class="logo-emoji">💄</span>
+        <h1><strong>Beauty</strong> Master Studio</h1>
+        <div class="sub">профессиональный уход</div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 2: ВЫБОР РОЛИ
+    ========================================== -->
+    <div id="roleSelect" class="screen">
+        <div style="margin-top: 20px;">
+            <h2>Добро пожаловать</h2>
+            <p class="text-muted">Выберите, кто вы</p>
+            <div class="flex-row" style="margin-top: 20px;">
+                <div class="role-btn" onclick="goToClientLogin()">
+                    <span class="icon">👤</span>
+                    <span class="label">Клиент</span>
+                </div>
+                <div class="role-btn" onclick="goToMasterLogin()">
+                    <span class="icon">🛠</span>
+                    <span class="label">Мастер</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 3: ВХОД / РЕГИСТРАЦИЯ КЛИЕНТА
+    ========================================== -->
+    <div id="clientLogin" class="screen">
+        <h3 style="font-weight: 300; color: #3d2c1e;">Вход / Регистрация</h3>
+        <div id="clientLoginStatus" class="text-muted">Введите данные для входа</div>
+        
+        <div class="input-group">
+            <label>Ваше имя</label>
+            <input id="clientName" placeholder="Анна" value="Анна">
+        </div>
+        <div class="input-group">
+            <label>Телефон</label>
+            <input id="clientPhone" placeholder="+7 900 123-45-67" value="+7 900 123-45-67">
+        </div>
+        <div class="input-group">
+            <label>Email</label>
+            <input id="clientEmail" type="email" placeholder="anna@mail.ru" value="anna@mail.ru">
+        </div>
+        <div class="input-group">
+            <label>Пароль (минимум 6 символов)</label>
+            <input id="clientPassword" type="password" placeholder="••••••" value="123456">
+        </div>
+        
+        <button class="btn" onclick="clientAuth()" id="clientAuthBtn">Войти / Зарегистрироваться</button>
+        <button class="btn btn-outline" onclick="goToRole()" style="margin-top: 8px;">Назад</button>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 4: ЛИЧНЫЙ КАБИНЕТ КЛИЕНТА
+    ========================================== -->
+    <div id="clientDashboard" class="screen">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+            <span style="font-size: 30px;">💄</span>
+            <div>
+                <h3 style="font-weight: 400; color: #3d2c1e;">Beauty Master</h3>
+                <span class="badge" id="clientNameDisplay">Клиент</span>
+                <span class="update-badge">🔄 live</span>
+            </div>
+        </div>
+        
+        <div class="salon-photo mb-2"></div>
+        
+        <div class="card" style="flex: 1;">
+            <div class="card-title">📋 Мои записи <span style="font-size: 12px; color: #8a7a6a; font-weight: 400;">(нажмите для просмотра)</span></div>
+            <div id="clientEntriesList">
+                <p class="text-muted">У вас пока нет записей</p>
+            </div>
+        </div>
+        
+        <button class="btn" onclick="showServices()">✏️ Записаться</button>
+        <button class="btn btn-outline" onclick="logout()" style="margin-top: 8px;">Выйти</button>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 4.5: ДЕТАЛИ ЗАЯВКИ (КЛИЕНТ)
+    ========================================== -->
+    <div id="clientEntryDetail" class="screen">
+        <span class="back-link" onclick="goToClientDashboard()">Назад</span>
+        <h4 style="font-weight: 400; color: #3d2c1e; margin-bottom: 12px;">📄 Детали записи</h4>
+        <div id="clientEntryDetailContent" class="card">
+            <!-- динамически -->
+        </div>
+        <button class="btn btn-outline" onclick="goToClientDashboard()">Закрыть</button>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 5: ВЫБОР УСЛУГИ (клиент)
+    ========================================== -->
+    <div id="servicesScreen" class="screen">
+        <span class="back-link" onclick="goToClientDashboard()">Назад</span>
+        <h4 style="font-weight: 400; color: #3d2c1e; margin-bottom: 12px;">Выберите услугу</h4>
+        
+        <div id="serviceCategories">
+            <!-- загружается из JS -->
+        </div>
+        
+        <div id="serviceDetail" class="hidden">
+            <div id="serviceDetailContent"></div>
+            
+            <div class="input-group">
+                <label>📅 Пожелание по дате и времени (необязательно)</label>
+                <textarea id="wishDate" placeholder="Например: 28 августа, после 15:00"></textarea>
+            </div>
+            
+            <p class="text-muted" style="font-size: 13px; text-align: center;">💳 Оплата только наличными или переводом</p>
+            
+            <button class="btn" onclick="confirmService()" id="confirmServiceBtn">✅ Записаться</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 6: ОЖИДАНИЕ ОТВЕТА МАСТЕРА
+    ========================================== -->
+    <div id="waitingScreen" class="screen">
+        <div class="text-center" style="margin-top: 40px;">
+            <div style="font-size: 56px; margin-bottom: 12px;">⏳</div>
+            <h3 style="font-weight: 400; color: #3d2c1e;">Ожидайте ответа мастера</h3>
+            <p class="text-muted">Ответ может занять от минуты до часа</p>
+            
+            <div class="timer-ring" id="waitingTimer">⏱</div>
+            
+            <div id="waitingStatus" class="card">
+                <p class="text-muted">Ищем мастера...</p>
+            </div>
+            
+            <button class="btn btn-danger" onclick="cancelWaiting()">Отменить заявку</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 7: ВЫБОР ВРЕМЕНИ (КЛИЕНТ ВЫБИРАЕТ ИЗ СПИСКА)
+    ========================================== -->
+    <div id="timeSelectScreen" class="screen">
+        <span class="back-link" onclick="goToClientDashboard()">Назад</span>
+        <h4 style="font-weight: 400; color: #3d2c1e;">🕐 Выберите удобное время</h4>
+        <p class="text-muted">Мастер предложил несколько вариантов</p>
+        
+        <div id="timeOptionsList" class="card">
+            <p class="text-muted">Загрузка вариантов...</p>
+        </div>
+        
+        <div class="flex-row mt-2">
+            <button class="btn btn-success" onclick="confirmClientTime()">✅ Подтвердить</button>
+            <button class="btn btn-outline" onclick="declineMasterTime()">❌ Отказаться</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 8: ФИНАЛЬНЫЙ ТАЙМЕР 15 СЕК
+    ========================================== -->
+    <div id="finalTimerScreen" class="screen">
+        <div class="text-center" style="margin-top: 40px;">
+            <div style="font-size: 56px;">✨</div>
+            <h3 style="font-weight: 400; color: #3d2c1e;">Вы успешно записаны!</h3>
+            <p class="text-muted">Спасибо, что выбрали Beauty Master Studio</p>
+            
+            <div class="timer-ring paused" id="finalTimerRing">
+                <span class="seconds" id="finalTimerSeconds">15</span>
+            </div>
+            
+            <p class="text-muted">Автоматический переход через <span id="finalTimerText">15</span> сек</p>
+            <button class="btn btn-outline" onclick="forceGoHome()">Вернуться сейчас</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 8.5: БЛАГОДАРНОСТЬ С ОТЗЫВАМИ (КЛИЕНТ)
+    ========================================== -->
+    <div id="thanksScreen" class="screen">
+        <div class="text-center" style="margin-top: 20px;">
+            <div class="thanks-icon">🙏</div>
+            <h3 style="font-weight: 400; color: #3d2c1e;">Спасибо за посещение!</h3>
+            <p class="text-muted">Мы рады, что вы выбрали <strong>Beauty Master Studio</strong></p>
+            
+            <div style="margin: 20px 0; background: #fcf9f7; border-radius: 24px; padding: 16px; border: 1px solid #ede7e2;">
+                <div style="font-weight: 500; color: #3d2c1e; margin-bottom: 12px;">⭐ Оцените мастера</div>
+                <div id="clientStarRating" style="display: flex; justify-content: center; gap: 8px; margin-bottom: 12px;">
+                    <button class="star-btn inactive" onclick="rateMaster(1)">⭐</button>
+                    <button class="star-btn inactive" onclick="rateMaster(2)">⭐</button>
+                    <button class="star-btn inactive" onclick="rateMaster(3)">⭐</button>
+                    <button class="star-btn inactive" onclick="rateMaster(4)">⭐</button>
+                    <button class="star-btn inactive" onclick="rateMaster(5)">⭐</button>
+                </div>
+                <div id="clientRatingText" class="text-muted" style="font-size: 13px;">Нажмите на звезду, чтобы оценить</div>
+            </div>
+            
+            <div style="margin: 20px 0; background: #fcf9f7; border-radius: 24px; padding: 16px; border: 1px solid #ede7e2;">
+                <div style="font-weight: 500; color: #3d2c1e; margin-bottom: 12px;">📝 Оставьте отзыв</div>
+                <div class="flex-row">
+                    <button class="btn btn-yandex" onclick="openYandex()">🗺 Яндекс Карты</button>
+                    <button class="btn btn-dgis" onclick="open2GIS()">📍 2ГИС</button>
+                </div>
+            </div>
+            
+            <button class="btn btn-outline" onclick="goToClientDashboard()" style="margin-top: 12px;">🏠 На главную</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 9: ВХОД МАСТЕРА (КОД 0403)
+    ========================================== -->
+    <div id="masterLogin" class="screen">
+        <h3 style="font-weight: 300; color: #3d2c1e;">🛠 Вход для мастера</h3>
+        <div id="masterLoginStatus" class="text-muted">Введите код доступа</div>
+        
+        <div class="input-group">
+            <label>Код доступа</label>
+            <input id="masterCodeInput" type="password" placeholder="• • • •" maxlength="6" style="font-size: 24px; letter-spacing: 8px; text-align: center;">
+        </div>
+        
+        <button class="btn" onclick="masterAuth()">Войти</button>
+        <button class="btn btn-outline" onclick="goToRole()" style="margin-top: 8px;">Назад</button>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 10: ВЫБОР МАСТЕРА (СПИСОК ПО КАТЕГОРИЯМ)
+    ========================================== -->
+    <div id="masterSelect" class="screen">
+        <span class="back-link" onclick="goToMasterLogin()">Назад</span>
+        <h3 style="font-weight: 400; color: #3d2c1e;">👨‍🎨 Выберите мастера</h3>
+        <p class="text-muted">Нажмите на мастера, чтобы войти в его кабинет</p>
+        
+        <div id="masterList" class="master-grid">
+            <!-- загружается из JS -->
+        </div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 11: КАБИНЕТ МАСТЕРА
+    ========================================== -->
+    <div id="masterDashboard" class="screen">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <div>
+                <span class="back-link" onclick="goToMasterSelect()">← Назад</span>
+                <h4 style="font-weight: 400; color: #3d2c1e;">🛠 Кабинет мастера</h4>
+                <span class="badge" id="masterNameDisplay">Мастер</span>
+            </div>
+            <span class="badge" id="masterCategoryDisplay">Категория</span>
+        </div>
+        
+        <div style="display: flex; border-bottom: 2px solid #ede7e2; margin: 12px 0;">
+            <button class="tab-btn active" data-tab="incoming" onclick="showMasterTab('incoming')">📩 Новые</button>
+            <button class="tab-btn" data-tab="active" onclick="showMasterTab('active')">📋 Активные</button>
+            <button class="tab-btn" data-tab="completed" onclick="showMasterTab('completed')">✅ Заверш.</button>
+        </div>
+        
+        <div id="masterTabContent" style="flex: 1; overflow-y: auto;">
+            <p class="text-muted">Нет записей</p>
+        </div>
+        
+        <button class="btn btn-outline" onclick="logout()" style="margin-top: 8px;">Выйти</button>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 11.5: ДЕТАЛИ ЗАЯВКИ (МАСТЕР)
+    ========================================== -->
+    <div id="masterEntryDetail" class="screen">
+        <span class="back-link" onclick="goToMasterDashboard()">Назад</span>
+        <h4 style="font-weight: 400; color: #3d2c1e; margin-bottom: 12px;">📄 Детали записи</h4>
+        <div id="masterEntryDetailContent" class="card">
+            <!-- динамически -->
+        </div>
+        <button class="btn btn-outline" onclick="goToMasterDashboard()">Закрыть</button>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 12: МАСТЕР ВЫБИРАЕТ ВРЕМЯ (1-100 ВАРИАНТОВ)
+    ========================================== -->
+    <div id="masterTimePickerScreen" class="screen">
+        <span class="back-link" onclick="goToMasterDashboard()">Назад</span>
+        <h4 style="font-weight: 400; color: #3d2c1e;">🕐 Выберите время для клиента</h4>
+        <p class="text-muted">Добавьте варианты времени (от 1 до 100)</p>
+        <div style="font-size: 12px; color: #8a7a6a; margin-bottom: 8px;">
+            Добавлено: <span id="timeCountDisplay">0</span> / 100
+        </div>
+        
+        <div id="masterTimeList" style="margin: 10px 0;">
+            <!-- динамически -->
+        </div>
+        
+        <div class="add-time-btn" onclick="addMasterTimeSlot()">
+            ➕ Добавить вариант времени
+        </div>
+        
+        <div style="margin-top: 12px;">
+            <div class="flex-row">
+                <button class="btn btn-success" onclick="saveMasterTimes()">✅ Отправить клиенту</button>
+                <button class="btn btn-outline" onclick="cancelMasterTimes()">Отмена</button>
+            </div>
+            <p class="text-muted" style="font-size: 12px; text-align: center; margin-top: 8px;">
+                Добавьте от 1 до 100 вариантов времени
+            </p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    ЭКРАН 13: ОЦЕНКА КЛИЕНТА (МАСТЕР)
+    ========================================== -->
+    <div id="masterRatingScreen" class="screen">
+        <span class="back-link" onclick="goToMasterDashboard()">Назад</span>
+        <div class="text-center" style="margin-top: 20px;">
+            <div style="font-size: 56px; margin-bottom: 12px;">⭐</div>
+            <h3 style="font-weight: 400; color: #3d2c1e;">Оцените клиента</h3>
+            <p class="text-muted" id="masterRatingClientName">Клиент</p>
+            
+            <div style="margin: 20px 0; background: #fcf9f7; border-radius: 24px; padding: 16px; border: 1px solid #ede7e2;">
+                <div style="font-weight: 500; color: #3d2c1e; margin-bottom: 12px;">⭐ Оценка клиента</div>
+                <div id="masterStarRating" style="display: flex; justify-content: center; gap: 8px;">
+                    <button class="star-btn inactive" onclick="rateClient(1)">⭐</button>
+                    <button class="star-btn inactive" onclick="rateClient(2)">⭐</button>
+                    <button class="star-btn inactive" onclick="rateClient(3)">⭐</button>
+                    <button class="star-btn inactive" onclick="rateClient(4)">⭐</button>
+                    <button class="star-btn inactive" onclick="rateClient(5)">⭐</button>
+                </div>
+                <div id="masterRatingText" class="text-muted" style="font-size: 13px; margin-top: 8px;">Нажмите на звезду, чтобы оценить клиента</div>
+            </div>
+            
+            <button class="btn btn-success" onclick="saveMasterRating()" id="saveMasterRatingBtn">✅ Сохранить оценку</button>
+            <button class="btn btn-outline" onclick="goToMasterDashboard()" style="margin-top: 8px;">Пропустить</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // ============================================================
+    // 1. ДАННЫЕ
+    // ============================================================
+    const SERVICES = {
+        'Ногтевой сервис': [
+            { name: 'Маникюр классический', price: 1500 },
+            { name: 'Маникюр с дизайном', price: 2200 },
+            { name: 'Педикюр', price: 2000 },
+            { name: 'Наращивание ногтей', price: 3000 },
+            { name: 'Shellac/гель-лак', price: 1800 },
+        ],
+        'Брови/Ресницы': [
+            { name: 'Коррекция бровей', price: 800 },
+            { name: 'Окрашивание бровей', price: 1000 },
+            { name: 'Ламинирование бровей', price: 1500 },
+            { name: 'Наращивание ресниц (классика)', price: 2500 },
+            { name: 'Наращивание ресниц (2D/3D)', price: 3500 },
+        ],
+        'Волосы': [
+            { name: 'Женская стрижка', price: 2500 },
+            { name: 'Мужская стрижка', price: 1800 },
+            { name: 'Детская стрижка', price: 1500 },
+            { name: 'Окрашивание (тонирование)', price: 3000 },
+            { name: 'Балаяж', price: 4500 },
+            { name: 'Ботокс для волос', price: 3500 },
+        ],
+        'Макияж': [
+            { name: 'Дневной макияж', price: 2000 },
+            { name: 'Вечерний макияж', price: 3000 },
+            { name: 'Свадебный макияж', price: 5000 },
+            { name: 'Макияж + прическа', price: 6000 },
+        ],
+        'Косметология': [
+            { name: 'Чистка лица', price: 2500 },
+            { name: 'Уходовая маска', price: 1500 },
+            { name: 'Массаж лица', price: 2000 },
+            { name: 'Лазерная эпиляция (зона)', price: 3000 },
+            { name: 'Био-ревитализация', price: 4500 },
+        ],
+    };
+
+    const MASTERS = [
+        { id: 'm1', name: 'Алина', category: 'Ногтевой сервис', rating: 4.9, code: '0403' },
+        { id: 'm2', name: 'Екатерина', category: 'Брови/Ресницы', rating: 4.8, code: '0403' },
+        { id: 'm3', name: 'Марина', category: 'Волосы', rating: 4.7, code: '0403' },
+        { id: 'm4', name: 'Ольга', category: 'Макияж', rating: 4.9, code: '0403' },
+        { id: 'm5', name: 'Светлана', category: 'Косметология', rating: 4.6, code: '0403' },
+    ];
+
+    // ============================================================
+    // 2. ЛОКАЛЬНОЕ ХРАНИЛИЩЕ
+    // ============================================================
+    let localEntries = JSON.parse(localStorage.getItem('bms_entries') || '[]');
+    let localUsers = JSON.parse(localStorage.getItem('bms_users') || '[]');
+    let currentUser = null;
+    let currentClientData = null;
+    let currentMasterData = null;
+    let selectedCategory = null;
+    let selectedService = null;
+    let waitingEntryId = null;
+    let waitingTimerInterval = null;
+    let finalTimerInterval = null;
+    let masterTab = 'incoming';
+    let currentEntryId = null;
+    let clientRating = 0;
+    let masterRating = 0;
+    let selectedTimeIndex = null;
+    let masterTimeSlots = [];
+    let masterTimeEntryId = null;
+    let masterRatingEntryId = null;
+    let thanksEntryId = null;
+
+    // ============================================================
+    // 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    // ============================================================
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const el = document.getElementById(id);
+        if (el) el.classList.add('active');
+    }
+
+    function getStatusText(status) {
+        const map = {
+            'waiting': '⏳ Ожидает мастера',
+            'accepted': '✅ Принята мастером',
+            'active': '✅ Подтверждена клиентом',
+            'completed': '✔ Завершена',
+            'declined': '❌ Отменена',
+            'waiting_time': '⏳ Выберите время',
+        };
+        return map[status] || status;
+    }
+
+    function getStatusBadge(status) {
+        const map = {
+            'waiting': '<span class="status-badge status-waiting">⏳ Ожидает</span>',
+            'accepted': '<span class="status-badge status-active">✅ Активна</span>',
+            'active': '<span class="status-badge status-active">✅ Подтверждена</span>',
+            'completed': '<span class="status-badge status-completed">✔ Завершена</span>',
+            'declined': '<span class="status-badge status-declined">❌ Отменена</span>',
+            'waiting_time': '<span class="status-badge status-waiting_time">⏳ Выбор времени</span>',
+        };
+        return map[status] || map['waiting'];
+    }
+
+    function formatDate(timestamp) {
+        if (!timestamp) return '—';
+        const d = new Date(timestamp);
+        return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function getTimeAgo(timestamp) {
+        if (!timestamp) return 'только что';
+        const now = Date.now();
+        const diff = Math.floor((now - timestamp) / 1000);
+        if (diff < 60) return `${diff} сек назад`;
+        if (diff < 3600) return `${Math.floor(diff / 60)} мин назад`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} ч назад`;
+        return `${Math.floor(diff / 86400)} дн назад`;
+    }
+
+    function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
+    }
+
+    function saveLocalData() {
+        localStorage.setItem('bms_entries', JSON.stringify(localEntries));
+        localStorage.setItem('bms_users', JSON.stringify(localUsers));
+    }
+
+    // ============================================================
+    // 4. НАВИГАЦИЯ
+    // ============================================================
+    function goToRole() {
+        showScreen('roleSelect');
+    }
+
+    function goToClientLogin() {
+        showScreen('clientLogin');
+        document.getElementById('clientLoginStatus').textContent = 'Введите данные для входа';
+        document.getElementById('clientLoginStatus').className = 'text-muted';
+    }
+
+    function goToMasterLogin() {
+        showScreen('masterLogin');
+        document.getElementById('masterLoginStatus').textContent = 'Введите код доступа';
+        document.getElementById('masterLoginStatus').className = 'text-muted';
+    }
+
+    function goToMasterSelect() {
+        showScreen('masterSelect');
+        renderMasterList();
+    }
+
+    function goToClientDashboard() {
+        showScreen('clientDashboard');
+        loadClientEntries();
+    }
+
+    function goToMasterDashboard() {
+        showScreen('masterDashboard');
+        loadMasterEntries();
+    }
+
+    // ============================================================
+    // 5. АВТОРИЗАЦИЯ КЛИЕНТА
+    // ============================================================
+    function clientAuth() {
+        const name = document.getElementById('clientName').value.trim();
+        const phone = document.getElementById('clientPhone').value.trim();
+        const email = document.getElementById('clientEmail').value.trim();
+        const password = document.getElementById('clientPassword').value;
+        const statusEl = document.getElementById('clientLoginStatus');
+
+        if (!name || !phone || !email || !password) {
+            statusEl.textContent = '⚠️ Заполните все поля';
+            statusEl.className = 'error-message';
+            return;
+        }
+
+        if (password.length < 6) {
+            statusEl.textContent = '⚠️ Пароль должен быть минимум 6 символов';
+            statusEl.className = 'error-message';
+            return;
+        }
+
+        const btn = document.getElementById('clientAuthBtn');
+        btn.textContent = '⏳ Загрузка...';
+        btn.disabled = true;
+
+        try {
+            let user = localUsers.find(u => u.email === email && u.password === password);
+            if (!user) {
+                user = {
+                    id: generateId(),
+                    name, phone, email, password,
+                    rating: 0,
+                    createdAt: Date.now()
+                };
+                localUsers.push(user);
+                saveLocalData();
+            }
+            currentUser = user;
+            currentClientData = user;
+
+            document.getElementById('clientNameDisplay').textContent = '👤 ' + currentClientData.name;
+            statusEl.textContent = '✅ Вход выполнен!';
+            statusEl.className = 'success-message';
+            
+            setTimeout(() => goToClientDashboard(), 500);
+
+        } catch (e) {
+            console.error('Ошибка:', e);
+            statusEl.textContent = '❌ ' + e.message;
+            statusEl.className = 'error-message';
+        }
+
+        btn.textContent = 'Войти / Зарегистрироваться';
+        btn.disabled = false;
+    }
+
+    // ============================================================
+    // 6. ЗАГРУЗКА ЗАПИСЕЙ КЛИЕНТА
+    // ============================================================
+    function loadClientEntries() {
+        const container = document.getElementById('clientEntriesList');
+        if (!currentUser) {
+            container.innerHTML = '<p class="text-muted">Вы не авторизованы</p>';
+            return;
+        }
+
+        const entries = localEntries.filter(e => e.clientId === currentUser.id);
+        
+        if (entries.length === 0) {
+            container.innerHTML = '<p class="text-muted">У вас пока нет записей</p>';
+            return;
+        }
+
+        let html = '';
+        entries.forEach(e => {
+            html += `
+                <div class="entry-item" onclick="showClientEntryDetail('${e.id}')">
+                    <div class="entry-title">${e.service || 'Услуга'} — ${e.price || 0} ₽</div>
+                    <div class="entry-meta">
+                        ${getStatusBadge(e.status || 'waiting')}
+                        ${e.masterName ? ' · ' + e.masterName : ''}
+                    </div>
+                    <div class="entry-meta">
+                        📅 ${e.clientSelectedTime ? formatDate(e.clientSelectedTime) : (e.masterTime ? formatDate(e.masterTime) : (e.wishDate || 'время не указано'))}
+                        ${e.createdAt ? ' · ' + getTimeAgo(e.createdAt) : ''}
+                    </div>
+                    <div style="margin-top: 4px; font-size: 12px; color: #c89f8a;">👆 Нажмите для деталей</div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    // ============================================================
+    // 6.5. ДЕТАЛИ ЗАЯВКИ ДЛЯ КЛИЕНТА
+    // ============================================================
+    function showClientEntryDetail(entryId) {
+        const entry = localEntries.find(e => e.id === entryId);
+        if (!entry) return;
+
+        showScreen('clientEntryDetail');
+        const container = document.getElementById('clientEntryDetailContent');
+
+        let timeSlotsHtml = '';
+        if (entry.timeSlots && entry.timeSlots.length > 0) {
+            timeSlotsHtml = `
+            <div class="detail-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="detail-label">📋 Варианты времени (${entry.timeSlots.length}):</span>
+                ${entry.timeSlots.map((t, i) => `
+                    <span style="font-size: 13px; color: ${entry.clientSelectedTime === t ? '#2d7a4a' : '#3d2c1e'}; font-weight: ${entry.clientSelectedTime === t ? '600' : '400'};">
+                        ${i+1}. ${formatDate(t)} ${entry.clientSelectedTime === t ? '✅ ВЫБРАНО' : ''}
+                    </span>
+                `).join('')}
+            </div>
+            `;
+        }
+
+        container.innerHTML = `
+            <div style="margin-bottom: 12px; text-align: center;">
+                <span class="status-badge ${entry.status === 'waiting' ? 'status-waiting' : entry.status === 'active' ? 'status-active' : entry.status === 'completed' ? 'status-completed' : entry.status === 'declined' ? 'status-declined' : 'status-waiting_time'}">${getStatusText(entry.status)}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📋 Услуга</span>
+                <span class="detail-value">${entry.service || '—'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">💰 Цена</span>
+                <span class="detail-value">${entry.price || 0} ₽</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📂 Категория</span>
+                <span class="detail-value">${entry.category || '—'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📅 Пожелание</span>
+                <span class="detail-value">${entry.wishDate || 'Не указано'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">👨‍🎨 Мастер</span>
+                <span class="detail-value master">${entry.masterName || 'Не назначен'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">🕐 Выбранное время</span>
+                <span class="detail-value">${entry.clientSelectedTime ? formatDate(entry.clientSelectedTime) : 'Не выбрано'}</span>
+            </div>
+            
+            ${timeSlotsHtml}
+            
+            <div class="detail-row">
+                <span class="detail-label">📅 Создана</span>
+                <span class="detail-value">${entry.createdAt ? formatDate(entry.createdAt) : '—'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">⏳ Ожидание</span>
+                <span class="detail-value">${entry.createdAt ? getTimeAgo(entry.createdAt) : '—'}</span>
+            </div>
+            
+            ${entry.status === 'active' ? `
+            <div class="detail-row" style="border-top: 2px solid #6abf8a; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #2d7a4a;">✅ Подтверждена</span>
+                <span class="detail-value active">${entry.confirmedAt ? formatDate(entry.confirmedAt) : '—'}</span>
+            </div>
+            ` : ''}
+            
+            ${entry.status === 'completed' ? `
+            <div class="detail-row" style="border-top: 2px solid #6abf8a; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #2d7a4a;">✔ Завершена</span>
+                <span class="detail-value completed">${entry.completedAt ? formatDate(entry.completedAt) : '—'}</span>
+            </div>
+            ` : ''}
+            
+            ${entry.status === 'declined' ? `
+            <div class="detail-row" style="border-top: 2px solid #d4857a; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #b84a3a;">❌ Отменена</span>
+                <span class="detail-value declined">${entry.declinedAt ? formatDate(entry.declinedAt) : '—'}</span>
+            </div>
+            ` : ''}
+            
+            ${entry.clientRating ? `
+            <div class="detail-row" style="border-top: 2px solid #f5c842; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #f5c842;">⭐ Ваша оценка мастера</span>
+                <span class="detail-value">${'⭐'.repeat(entry.clientRating)}</span>
+            </div>
+            ` : ''}
+            
+            ${entry.masterRating ? `
+            <div class="detail-row" style="border-top: 2px solid #f5c842; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #f5c842;">⭐ Оценка мастера</span>
+                <span class="detail-value">${'⭐'.repeat(entry.masterRating)}</span>
+            </div>
+            ` : ''}
+        `;
+    }
+
+    // ============================================================
+    // 7. ПОКАЗ УСЛУГ
+    // ============================================================
+    function showServices() {
+        showScreen('servicesScreen');
+        selectedCategory = null;
+        selectedService = null;
+        document.getElementById('serviceDetail').classList.add('hidden');
+        document.getElementById('confirmServiceBtn').disabled = true;
+        document.getElementById('confirmServiceBtn').textContent = '⚠️ Выберите услугу';
+
+        const container = document.getElementById('serviceCategories');
+        let html = '';
+        for (const [cat, items] of Object.entries(SERVICES)) {
+            html += `
+                <div class="card service-category" onclick="selectCategory('${cat}')">
+                    <div class="card-title">📂 ${cat}</div>
+                    <div class="card-sub">${items.length} услуг</div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        document.getElementById('wishDate').value = '';
+    }
+
+    function selectCategory(cat) {
+        selectedCategory = cat;
+        const items = SERVICES[cat];
+        const container = document.getElementById('serviceDetailContent');
+        const detail = document.getElementById('serviceDetail');
+        detail.classList.remove('hidden');
+
+        container.innerHTML = items.map((s, idx) => `
+            <div class="service-item" onclick="selectService(${idx})">
+                <span class="name">${s.name}</span>
+                <span class="price">${s.price} ₽</span>
+            </div>
+        `).join('');
+        
+        document.getElementById('confirmServiceBtn').disabled = true;
+        document.getElementById('confirmServiceBtn').textContent = '⚠️ Выберите услугу';
+    }
+
+    function selectService(idx) {
+        const items = SERVICES[selectedCategory];
+        selectedService = items[idx];
+        document.querySelectorAll('.service-item').forEach(el => el.classList.remove('selected'));
+        const allItems = document.querySelectorAll('.service-item');
+        if (allItems[idx]) allItems[idx].classList.add('selected');
+        
+        document.getElementById('confirmServiceBtn').disabled = false;
+        document.getElementById('confirmServiceBtn').textContent = '✅ Записаться';
+    }
+
+    // ============================================================
+    // 8. ПОДТВЕРЖДЕНИЕ ЗАПИСИ
+    // ============================================================
+    function confirmService() {
+        if (!selectedService || !selectedCategory) {
+            alert('Выберите услугу');
+            return;
+        }
+
+        if (!currentUser) {
+            alert('Пожалуйста, войдите в систему');
+            return;
+        }
+
+        const wishDate = document.getElementById('wishDate').value.trim() || 'Не указано';
+        const clientId = currentUser.id;
+        const clientName = currentClientData.name || 'Клиент';
+        const clientPhone = currentClientData.phone || '';
+
+        const categoryMasters = MASTERS.filter(m => m.category === selectedCategory);
+        const masterIds = categoryMasters.map(m => m.id);
+
+        if (masterIds.length === 0) {
+            alert('Нет доступных мастеров для этой услуги');
+            return;
+        }
+
+        const entry = {
+            id: generateId(),
+            clientId: clientId,
+            clientName: clientName,
+            clientPhone: clientPhone,
+            service: selectedService.name,
+            category: selectedCategory,
+            price: selectedService.price,
+            wishDate: wishDate,
+            status: 'waiting',
+            masterId: null,
+            masterName: null,
+            masterTime: null,
+            clientSelectedTime: null,
+            timeSlots: [],
+            createdAt: Date.now(),
+            isDeleted: false,
+            targetMasters: masterIds,
+        };
+
+        localEntries.push(entry);
+        saveLocalData();
+        waitingEntryId = entry.id;
+        showWaitingScreen(entry.id);
+    }
+
+    // ============================================================
+    // 9. ЭКРАН ОЖИДАНИЯ
+    // ============================================================
+    function showWaitingScreen(entryId) {
+        showScreen('waitingScreen');
+        document.getElementById('waitingStatus').innerHTML = '<p class="text-muted">⏳ Ищем мастера...</p>';
+
+        if (waitingTimerInterval) clearInterval(waitingTimerInterval);
+
+        let seconds = 0;
+        waitingTimerInterval = setInterval(() => {
+            seconds++;
+            document.getElementById('waitingTimer').textContent = seconds;
+        }, 1000);
+
+        const checkInterval = setInterval(() => {
+            const entry = localEntries.find(e => e.id === entryId);
+            if (!entry) return;
+
+            // Если статус waiting_time и есть варианты времени - показываем их
+            if (entry.status === 'waiting_time' && entry.timeSlots && entry.timeSlots.length > 0) {
+                clearInterval(checkInterval);
+                clearInterval(waitingTimerInterval);
+                
+                document.getElementById('waitingStatus').innerHTML = `
+                    <p style="color: #2d7a4a;">✅ Мастер предложил варианты времени!</p>
+                    <p class="text-muted">${entry.masterName || 'Мастер'} предложил ${entry.timeSlots.length} вариантов</p>
+                `;
+                
+                currentEntryId = entryId;
+                setTimeout(() => showTimeSelect(entryId), 1500);
+            } 
+            // Если статус accepted или active
+            else if (entry.status === 'accepted' || entry.status === 'active') {
+                clearInterval(checkInterval);
+                clearInterval(waitingTimerInterval);
+                
+                document.getElementById('waitingStatus').innerHTML = `
+                    <p style="color: #2d7a4a;">✅ Мастер принял заявку!</p>
+                    <p class="text-muted">${entry.masterName || 'Мастер'} назначил время: ${entry.masterTime ? formatDate(entry.masterTime) : 'уточняется'}</p>
+                `;
+                
+                if (entry.masterTime) {
+                    currentEntryId = entryId;
+                    setTimeout(() => showTimeSelect(entryId), 1500);
+                }
+            } 
+            else if (entry.status === 'declined') {
+                clearInterval(checkInterval);
+                clearInterval(waitingTimerInterval);
+                document.getElementById('waitingStatus').innerHTML = `
+                    <p style="color: #b84a3a;">❌ Заявка отменена</p>
+                `;
+                setTimeout(() => goToClientDashboard(), 2000);
+            }
+        }, 2000);
+    }
+
+    // ============================================================
+    // 10. ВЫБОР ВРЕМЕНИ (КЛИЕНТ)
+    // ============================================================
+    function showTimeSelect(entryId) {
+        showScreen('timeSelectScreen');
+        currentEntryId = entryId;
+        selectedTimeIndex = null;
+
+        const entry = localEntries.find(e => e.id === entryId);
+        if (!entry) {
+            document.getElementById('timeOptionsList').innerHTML = '<p class="text-muted">Ошибка: заявка не найдена</p>';
+            return;
+        }
+
+        const container = document.getElementById('timeOptionsList');
+        
+        // Проверяем, есть ли варианты времени
+        if (entry.timeSlots && entry.timeSlots.length > 0) {
+            let html = `
+                <div class="card-title">${entry.masterName || 'Мастер'} предложил ${entry.timeSlots.length} вариантов:</div>
+                <div style="margin-top: 8px;">
+            `;
+            entry.timeSlots.forEach((t, idx) => {
+                const isSelected = entry.clientSelectedTime === t;
+                html += `
+                    <div class="time-option ${isSelected ? 'selected' : ''}" onclick="selectTimeOption(${idx})">
+                        <div>
+                            <span class="time-index">#${idx+1}</span>
+                            <span class="time-text">${formatDate(t)}</span>
+                        </div>
+                        <span class="time-check">${isSelected ? '✅' : ''}</span>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+            
+            // Если уже выбрано время, подсвечиваем его
+            if (entry.clientSelectedTime) {
+                const idx = entry.timeSlots.findIndex(t => t === entry.clientSelectedTime);
+                if (idx !== -1) selectTimeOption(idx);
+            }
+        } else {
+            // Если нет вариантов времени
+            container.innerHTML = `
+                <div class="card-title">⏳ Мастер еще не добавил варианты времени</div>
+                <p class="text-muted">Подождите, мастер добавляет варианты...</p>
+                <div class="loading-spinner"></div>
+            `;
+            
+            // Продолжаем следить за обновлениями
+            const checkInterval = setInterval(() => {
+                const updatedEntry = localEntries.find(e => e.id === entryId);
+                if (updatedEntry && updatedEntry.timeSlots && updatedEntry.timeSlots.length > 0) {
+                    clearInterval(checkInterval);
+                    showTimeSelect(entryId);
+                }
+            }, 2000);
+        }
+    }
+
+    function selectTimeOption(index) {
+        selectedTimeIndex = index;
+        document.querySelectorAll('.time-option').forEach(el => el.classList.remove('selected'));
+        const items = document.querySelectorAll('.time-option');
+        if (items[index]) {
+            items[index].classList.add('selected');
+            items[index].querySelector('.time-check').textContent = '✅';
+        }
+        document.querySelectorAll('.time-option').forEach((el, i) => {
+            if (i !== index) {
+                el.querySelector('.time-check').textContent = '';
+            }
+        });
+    }
+
+    function confirmClientTime() {
+        if (!currentEntryId) {
+            alert('Ошибка: заявка не найдена');
+            return;
+        }
+        
+        const entry = localEntries.find(e => e.id === currentEntryId);
+        if (!entry) {
+            alert('Ошибка: заявка не найдена');
+            return;
+        }
+
+        // Проверяем, есть ли варианты времени
+        if (entry.timeSlots && entry.timeSlots.length > 0) {
+            if (selectedTimeIndex === null) {
+                alert('Выберите удобное время из списка');
+                return;
+            }
+            entry.clientSelectedTime = entry.timeSlots[selectedTimeIndex];
+        } else if (!entry.masterTime) {
+            alert('Мастер еще не назначил время');
+            return;
+        } else {
+            entry.clientSelectedTime = entry.masterTime;
+        }
+
+        entry.status = 'active';
+        entry.confirmedAt = Date.now();
+        saveLocalData();
+        showFinalTimer();
+    }
+
+    function declineMasterTime() {
+        if (!currentEntryId) return;
+        if (!confirm('Вы уверены, что хотите отказаться от этой записи?')) return;
+        const entry = localEntries.find(e => e.id === currentEntryId);
+        if (entry) {
+            entry.status = 'declined';
+            entry.declinedAt = Date.now();
+            saveLocalData();
+        }
+        goToClientDashboard();
+    }
+
+    function cancelWaiting() {
+        if (!waitingEntryId) return;
+        if (!confirm('Отменить заявку?')) return;
+        const entry = localEntries.find(e => e.id === waitingEntryId);
+        if (entry) {
+            entry.status = 'declined';
+            saveLocalData();
+        }
+        if (waitingTimerInterval) clearInterval(waitingTimerInterval);
+        goToClientDashboard();
+    }
+
+    // ============================================================
+    // 11. ФИНАЛЬНЫЙ ТАЙМЕР
+    // ============================================================
+    function showFinalTimer() {
+        showScreen('finalTimerScreen');
+        let seconds = 15;
+        const ring = document.getElementById('finalTimerRing');
+        const text = document.getElementById('finalTimerText');
+        const secDisplay = document.getElementById('finalTimerSeconds');
+
+        if (finalTimerInterval) clearInterval(finalTimerInterval);
+
+        finalTimerInterval = setInterval(() => {
+            seconds--;
+            text.textContent = seconds;
+            secDisplay.textContent = seconds;
+            ring.style.borderRightColor = seconds > 5 ? '#c89f8a' : '#d4857a';
+
+            if (seconds <= 0) {
+                clearInterval(finalTimerInterval);
+                showThanksScreen(currentEntryId);
+            }
+        }, 1000);
+    }
+
+    function forceGoHome() {
+        if (finalTimerInterval) clearInterval(finalTimerInterval);
+        goToClientDashboard();
+    }
+
+    // ============================================================
+    // 11.5. БЛАГОДАРНОСТЬ С ОТЗЫВАМИ (КЛИЕНТ)
+    // ============================================================
+    function showThanksScreen(entryId) {
+        thanksEntryId = entryId;
+        clientRating = 0;
+        
+        document.querySelectorAll('#clientStarRating .star-btn').forEach(el => {
+            el.className = 'star-btn inactive';
+        });
+        document.getElementById('clientRatingText').textContent = 'Нажмите на звезду, чтобы оценить мастера';
+        document.getElementById('clientRatingText').className = 'text-muted';
+        
+        showScreen('thanksScreen');
+    }
+
+    function rateMaster(rating) {
+        clientRating = rating;
+        document.querySelectorAll('#clientStarRating .star-btn').forEach((el, idx) => {
+            if (idx < rating) {
+                el.className = 'star-btn active';
+            } else {
+                el.className = 'star-btn inactive';
+            }
+        });
+        document.getElementById('clientRatingText').textContent = '⭐ Оценка: ' + rating + ' из 5';
+        document.getElementById('clientRatingText').className = 'success-message';
+        
+        const entry = localEntries.find(e => e.id === thanksEntryId);
+        if (entry) {
+            entry.clientRating = rating;
+            saveLocalData();
+        }
+    }
+
+    function openYandex() {
+        window.open('https://yandex.ru/maps/', '_blank');
+    }
+
+    function open2GIS() {
+        window.open('https://2gis.ru/', '_blank');
+    }
+
+    // ============================================================
+    // 12. АВТОРИЗАЦИЯ МАСТЕРА
+    // ============================================================
+    function masterAuth() {
+        const code = document.getElementById('masterCodeInput').value.trim();
+        const status = document.getElementById('masterLoginStatus');
+
+        if (!code) {
+            status.textContent = '⚠️ Введите код';
+            status.className = 'error-message';
+            return;
+        }
+
+        const master = MASTERS.find(m => m.code === code);
+        if (!master) {
+            status.textContent = '❌ Неверный код доступа';
+            status.className = 'error-message';
+            return;
+        }
+
+        goToMasterSelect();
+    }
+
+    // ============================================================
+    // 13. СПИСОК МАСТЕРОВ ПО КАТЕГОРИЯМ
+    // ============================================================
+    function renderMasterList() {
+        const container = document.getElementById('masterList');
+        
+        const categories = {};
+        MASTERS.forEach(m => {
+            if (!categories[m.category]) categories[m.category] = [];
+            categories[m.category].push(m);
+        });
+
+        let html = '';
+        for (const [category, masters] of Object.entries(categories)) {
+            html += `
+                <div style="grid-column: 1 / -1; margin-top: 8px; font-weight: 600; color: #3d2c1e; font-size: 14px;">
+                    📂 ${category}
+                </div>
+            `;
+            masters.forEach(m => {
+                const stars = '⭐'.repeat(Math.floor(m.rating)) + (m.rating % 1 >= 0.5 ? '⭐' : '');
+                html += `
+                    <div class="master-card" onclick="selectMaster('${m.id}')">
+                        <div class="master-name">${m.name}</div>
+                        <div class="master-rating">${stars} ${m.rating}</div>
+                        <div style="margin-top: 6px;">
+                            <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); enterMaster('${m.id}')">🔑 Войти</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        container.innerHTML = html;
+    }
+
+    function selectMaster(masterId) {
+        document.querySelectorAll('.master-card').forEach(el => el.classList.remove('selected'));
+        const cards = document.querySelectorAll('.master-card');
+        const index = MASTERS.findIndex(m => m.id === masterId);
+        if (cards[index]) cards[index].classList.add('selected');
+    }
+
+    function enterMaster(masterId) {
+        const master = MASTERS.find(m => m.id === masterId);
+        if (!master) return;
+        
+        const code = prompt('Введите код доступа для мастера ' + master.name + ':');
+        if (code !== master.code) {
+            alert('❌ Неверный код!');
+            return;
+        }
+
+        currentMasterData = master;
+        document.getElementById('masterNameDisplay').textContent = '👤 ' + master.name;
+        document.getElementById('masterCategoryDisplay').textContent = master.category;
+        
+        goToMasterDashboard();
+    }
+
+    // ============================================================
+    // 14. КАБИНЕТ МАСТЕРА
+    // ============================================================
+    function loadMasterEntries() {
+        const container = document.getElementById('masterTabContent');
+        if (!currentMasterData) {
+            container.innerHTML = '<p class="text-muted">Мастер не выбран</p>';
+            return;
+        }
+
+        const category = currentMasterData.category;
+        const masterId = currentMasterData.id;
+
+        let entries = localEntries.filter(e => 
+            e.category === category && 
+            e.isDeleted === false &&
+            (e.masterId === masterId || (e.targetMasters && e.targetMasters.includes(masterId)))
+        );
+
+        let filtered = [];
+        if (masterTab === 'incoming') {
+            filtered = entries.filter(e => e.status === 'waiting' && !e.masterId);
+        } else if (masterTab === 'active') {
+            filtered = entries.filter(e => (e.status === 'active' || e.status === 'accepted' || e.status === 'waiting_time') && e.masterId === masterId);
+        } else if (masterTab === 'completed') {
+            filtered = entries.filter(e => e.status === 'completed' && e.masterId === masterId);
+        }
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<p class="text-muted">Нет записей в этой категории</p>';
+            return;
+        }
+
+        let html = '';
+        filtered.forEach(e => {
+            const isMy = e.masterId === masterId;
+            html += `
+                <div class="entry-item" onclick="showMasterEntryDetail('${e.id}')" style="${isMy ? 'border-left-color: #6abf8a;' : ''}">
+                    <div class="entry-title">${e.clientName || 'Клиент'} — ${e.service || 'Услуга'}</div>
+                    <div class="entry-meta">
+                        ${getStatusBadge(e.status)}
+                        ${e.masterName ? '· ' + e.masterName : '· Ожидает мастера'}
+                    </div>
+                    <div class="entry-meta">
+                        📅 ${e.wishDate || 'без пожеланий'}
+                        ${e.createdAt ? ' · ' + getTimeAgo(e.createdAt) : ''}
+                    </div>
+                    <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+            `;
+
+            if (e.status === 'waiting' && !e.masterId) {
+                html += `<button class="btn btn-sm btn-success" onclick="event.stopPropagation(); acceptEntry('${e.id}')">✅ Принять</button>`;
+            }
+
+            if (e.masterId === masterId && (e.status === 'accepted' || e.status === 'waiting_time')) {
+                html += `<button class="btn btn-sm" onclick="event.stopPropagation(); openTimePicker('${e.id}')">🕐 Назначить время</button>`;
+            }
+
+            if (e.masterId === masterId && e.status === 'active') {
+                html += `<button class="btn btn-sm" onclick="event.stopPropagation(); completeEntry('${e.id}')">✔ Завершить</button>`;
+            }
+
+            html += `</div>
+                    <div style="margin-top: 4px; font-size: 12px; color: #c89f8a;">👆 Нажмите для деталей</div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    // ============================================================
+    // 14.5. ДЕТАЛИ ЗАЯВКИ ДЛЯ МАСТЕРА
+    // ============================================================
+    function showMasterEntryDetail(entryId) {
+        const entry = localEntries.find(e => e.id === entryId);
+        if (!entry) return;
+
+        showScreen('masterEntryDetail');
+        const container = document.getElementById('masterEntryDetailContent');
+
+        let timeSlotsHtml = '';
+        if (entry.timeSlots && entry.timeSlots.length > 0) {
+            timeSlotsHtml = `
+            <div class="detail-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="detail-label">📋 Предложенные варианты (${entry.timeSlots.length}):</span>
+                ${entry.timeSlots.map((t, i) => `
+                    <span style="font-size: 13px; color: ${entry.clientSelectedTime === t ? '#2d7a4a' : '#3d2c1e'}; font-weight: ${entry.clientSelectedTime === t ? '600' : '400'};">
+                        ${i+1}. ${formatDate(t)} ${entry.clientSelectedTime === t ? '✅ ВЫБРАНО' : ''}
+                    </span>
+                `).join('')}
+            </div>
+            `;
+        }
+
+        container.innerHTML = `
+            <div style="margin-bottom: 12px; text-align: center;">
+                <span class="status-badge ${entry.status === 'waiting' ? 'status-waiting' : entry.status === 'active' ? 'status-active' : entry.status === 'completed' ? 'status-completed' : entry.status === 'declined' ? 'status-declined' : 'status-waiting_time'}">${getStatusText(entry.status)}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">👤 Клиент</span>
+                <span class="detail-value client">${entry.clientName || '—'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📞 Телефон</span>
+                <span class="detail-value">${entry.clientPhone || '—'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📋 Услуга</span>
+                <span class="detail-value">${entry.service || '—'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">💰 Цена</span>
+                <span class="detail-value">${entry.price || 0} ₽</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📂 Категория</span>
+                <span class="detail-value">${entry.category || '—'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📅 Пожелание клиента</span>
+                <span class="detail-value">${entry.wishDate || 'Не указано'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">👨‍🎨 Мастер</span>
+                <span class="detail-value master">${entry.masterName || 'Не назначен'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">🕐 Выбранное клиентом</span>
+                <span class="detail-value">${entry.clientSelectedTime ? formatDate(entry.clientSelectedTime) : 'Не выбрано'}</span>
+            </div>
+            
+            ${timeSlotsHtml}
+            
+            <div class="detail-row">
+                <span class="detail-label">📅 Заявка создана</span>
+                <span class="detail-value">${entry.createdAt ? formatDate(entry.createdAt) : '—'}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">⏳ Ожидает</span>
+                <span class="detail-value">${entry.createdAt ? getTimeAgo(entry.createdAt) : '—'}</span>
+            </div>
+            
+            ${entry.status === 'active' ? `
+            <div class="detail-row" style="border-top: 2px solid #6abf8a; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #2d7a4a;">✅ Подтверждена клиентом</span>
+                <span class="detail-value active">${entry.confirmedAt ? formatDate(entry.confirmedAt) : '—'}</span>
+            </div>
+            ` : ''}
+            
+            ${entry.status === 'completed' ? `
+            <div class="detail-row" style="border-top: 2px solid #6abf8a; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #2d7a4a;">✔ Завершена</span>
+                <span class="detail-value completed">${entry.completedAt ? formatDate(entry.completedAt) : '—'}</span>
+            </div>
+            ` : ''}
+            
+            ${entry.status === 'declined' ? `
+            <div class="detail-row" style="border-top: 2px solid #d4857a; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #b84a3a;">❌ Отменена</span>
+                <span class="detail-value declined">${entry.declinedAt ? formatDate(entry.declinedAt) : '—'}</span>
+            </div>
+            ` : ''}
+            
+            ${entry.masterRating ? `
+            <div class="detail-row" style="border-top: 2px solid #f5c842; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #f5c842;">⭐ Оценка клиента</span>
+                <span class="detail-value">${'⭐'.repeat(entry.masterRating)}</span>
+            </div>
+            ` : ''}
+            
+            ${entry.clientRating ? `
+            <div class="detail-row" style="border-top: 2px solid #f5c842; padding-top: 12px; margin-top: 4px;">
+                <span class="detail-label" style="color: #f5c842;">⭐ Оценка мастера</span>
+                <span class="detail-value">${'⭐'.repeat(entry.clientRating)}</span>
+            </div>
+            ` : ''}
+        `;
+    }
+
+    function showMasterTab(tab) {
+        masterTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+        loadMasterEntries();
+    }
+
+    // ============================================================
+    // 15. МАСТЕР ПРИНИМАЕТ ЗАЯВКУ
+    // ============================================================
+    function acceptEntry(entryId) {
+        const masterId = currentMasterData.id;
+        const masterName = currentMasterData.name;
+        
+        const entry = localEntries.find(e => e.id === entryId);
+        if (entry) {
+            entry.masterId = masterId;
+            entry.masterName = masterName;
+            entry.status = 'accepted';
+            entry.acceptedAt = Date.now();
+            saveLocalData();
+            
+            // Открываем выбор времени
+            openTimePicker(entryId);
+        }
+    }
+
+    // ============================================================
+    // 16. МАСТЕР ВЫБИРАЕТ ВРЕМЯ (1-100 ВАРИАНТОВ)
+    // ============================================================
+    function openTimePicker(entryId) {
+        masterTimeEntryId = entryId;
+        masterTimeSlots = [];
+        
+        const entry = localEntries.find(e => e.id === entryId);
+        if (entry && entry.timeSlots && entry.timeSlots.length > 0) {
+            masterTimeSlots = [...entry.timeSlots];
+        }
+        
+        showScreen('masterTimePickerScreen');
+        renderMasterTimeSlots();
+    }
+
+    function renderMasterTimeSlots() {
+        const container = document.getElementById('masterTimeList');
+        document.getElementById('timeCountDisplay').textContent = masterTimeSlots.length;
+        
+        if (masterTimeSlots.length === 0) {
+            container.innerHTML = `
+                <div class="card" style="text-align: center; color: #8a7a6a; padding: 20px;">
+                    Нет добавленных вариантов времени<br>
+                    <span style="font-size: 12px;">Нажмите "Добавить вариант времени"</span>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        masterTimeSlots.forEach((t, idx) => {
+            html += `
+                <div class="time-option" style="border-color: #6abf8a; background: #f0f8f0;">
+                    <div>
+                        <span class="time-index">#${idx+1}</span>
+                        <span class="time-text">${formatDate(t)}</span>
+                    </div>
+                    <button class="btn btn-sm btn-danger" style="width: auto; padding: 4px 12px; font-size: 12px;" onclick="event.stopPropagation(); removeMasterTime(${idx})">✕</button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    function addMasterTimeSlot() {
+        if (masterTimeSlots.length >= 100) {
+            alert('Максимум 100 вариантов времени');
+            return;
+        }
+
+        const container = document.getElementById('masterTimeList');
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'time-input-wrapper';
+        
+        const input = document.createElement('input');
+        input.type = 'datetime-local';
+        const now = new Date();
+        now.setHours(now.getHours() + 2);
+        input.value = now.toISOString().slice(0, 16);
+        
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-sm btn-success';
+        btn.textContent = '➕ Добавить';
+        btn.onclick = function() {
+            const val = input.value;
+            if (!val) {
+                alert('Выберите дату и время');
+                return;
+            }
+            const timeMs = new Date(val).getTime();
+            if (masterTimeSlots.includes(timeMs)) {
+                alert('Такое время уже добавлено');
+                return;
+            }
+            masterTimeSlots.push(timeMs);
+            masterTimeSlots.sort((a, b) => a - b);
+            renderMasterTimeSlots();
+        };
+        
+        wrapper.appendChild(input);
+        wrapper.appendChild(btn);
+        container.appendChild(wrapper);
+        
+        setTimeout(() => {
+            wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            input.focus();
+        }, 100);
+    }
+
+    function removeMasterTime(index) {
+        masterTimeSlots.splice(index, 1);
+        renderMasterTimeSlots();
+    }
+
+    function saveMasterTimes() {
+        if (masterTimeSlots.length === 0) {
+            alert('Добавьте хотя бы один вариант времени');
+            return;
+        }
+
+        const entry = localEntries.find(e => e.id === masterTimeEntryId);
+        if (entry) {
+            entry.timeSlots = [...masterTimeSlots];
+            entry.status = 'waiting_time';  // Меняем статус на "ожидание выбора времени"
+            entry.timeSlots.sort((a, b) => a - b);
+            saveLocalData();
+            
+            // Очищаем selectedTimeIndex, чтобы клиент мог выбрать заново
+            selectedTimeIndex = null;
+        }
+
+        alert('✅ ' + masterTimeSlots.length + ' вариантов времени отправлены клиенту!');
+        goToMasterDashboard();
+    }
+
+    function cancelMasterTimes() {
+        if (masterTimeSlots.length > 0) {
+            if (!confirm('Отменить выбор времени? Введенные данные не сохранятся')) return;
+        }
+        goToMasterDashboard();
+    }
+
+    // ============================================================
+    // 17. ЗАВЕРШЕНИЕ ЗАПИСИ (МАСТЕР)
+    // ============================================================
+    function completeEntry(entryId) {
+        if (!confirm('Завершить запись? Клиент сможет оставить отзыв')) return;
+        const entry = localEntries.find(e => e.id === entryId);
+        if (entry) {
+            entry.status = 'completed';
+            entry.completedAt = Date.now();
+            saveLocalData();
+            
+            // Показываем страницу оценки клиента
+            showMasterRating(entryId);
+        }
+    }
+
+    // ============================================================
+    // 18. ОЦЕНКА КЛИЕНТА (МАСТЕР)
+    // ============================================================
+    function showMasterRating(entryId) {
+        masterRatingEntryId = entryId;
+        masterRating = 0;
+        
+        const entry = localEntries.find(e => e.id === entryId);
+        if (entry) {
+            document.getElementById('masterRatingClientName').textContent = 'Клиент: ' + entry.clientName;
+        }
+        
+        document.querySelectorAll('#masterStarRating .star-btn').forEach(el => {
+            el.className = 'star-btn inactive';
+        });
+        document.getElementById('masterRatingText').textContent = 'Нажмите на звезду, чтобы оценить клиента';
+        document.getElementById('masterRatingText').className = 'text-muted';
+        
+        showScreen('masterRatingScreen');
+    }
+
+    function rateClient(rating) {
+        masterRating = rating;
+        document.querySelectorAll('#masterStarRating .star-btn').forEach((el, idx) => {
+            if (idx < rating) {
+                el.className = 'star-btn active';
+            } else {
+                el.className = 'star-btn inactive';
+            }
+        });
+        document.getElementById('masterRatingText').textContent = '⭐ Оценка: ' + rating + ' из 5';
+        document.getElementById('masterRatingText').className = 'success-message';
+    }
+
+    function saveMasterRating() {
+        if (masterRating === 0) {
+            alert('Поставьте оценку клиенту');
+            return;
+        }
+        
+        const entry = localEntries.find(e => e.id === masterRatingEntryId);
+        if (entry) {
+            entry.masterRating = masterRating;
+            saveLocalData();
+        }
+        
+        alert('✅ Оценка сохранена!');
+        goToMasterDashboard();
+    }
+
+    // ============================================================
+    // 19. ВЫХОД
+    // ============================================================
+    function logout() {
+        currentUser = null;
+        currentClientData = null;
+        currentMasterData = null;
+        if (waitingTimerInterval) clearInterval(waitingTimerInterval);
+        if (finalTimerInterval) clearInterval(finalTimerInterval);
+        goToRole();
+    }
+
+    // ============================================================
+    // 20. ЗАПУСК И АВТООБНОВЛЕНИЕ
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        // Автообновление каждые 3 секунды
+        setInterval(() => {
+            localEntries = JSON.parse(localStorage.getItem('bms_entries') || '[]');
+            localUsers = JSON.parse(localStorage.getItem('bms_users') || '[]');
+            
+            if (document.getElementById('clientDashboard').classList.contains('active') && currentUser) {
+                loadClientEntries();
+            }
+            
+            if (document.getElementById('masterDashboard').classList.contains('active') && currentMasterData) {
+                loadMasterEntries();
+            }
+            
+            // Проверяем статус ожидания
+            if (document.getElementById('waitingScreen').classList.contains('active') && waitingEntryId) {
+                const entry = localEntries.find(e => e.id === waitingEntryId);
+                if (entry) {
+                    if ((entry.status === 'waiting_time' && entry.timeSlots && entry.timeSlots.length > 0) ||
+                        entry.status === 'accepted' || entry.status === 'active') {
+                        if (waitingTimerInterval) clearInterval(waitingTimerInterval);
+                        document.getElementById('waitingStatus').innerHTML = `
+                            <p style="color: #2d7a4a;">✅ Мастер ответил!</p>
+                            <p class="text-muted">${entry.masterName || 'Мастер'} ${entry.timeSlots && entry.timeSlots.length > 0 ? 'предложил ' + entry.timeSlots.length + ' вариантов времени' : 'назначил время'}</p>
+                        `;
+                        currentEntryId = waitingEntryId;
+                        setTimeout(() => showTimeSelect(waitingEntryId), 1500);
+                    } else if (entry.status === 'declined') {
+                        if (waitingTimerInterval) clearInterval(waitingTimerInterval);
+                        document.getElementById('waitingStatus').innerHTML = `
+                            <p style="color: #b84a3a;">❌ Заявка отменена</p>
+                        `;
+                        setTimeout(() => goToClientDashboard(), 2000);
+                    }
+                }
+            }
+        }, 3000);
+
+        setTimeout(() => {
+            if (document.getElementById('splash').classList.contains('active')) {
+                showScreen('roleSelect');
+            }
+        }, 5000);
+    });
+
+    console.log('💄 Beauty Master Studio запущен!');
+    console.log('🔑 Код мастера: 0403');
+    console.log('📧 Введите ЛЮБОЙ email и пароль (мин. 6 символов)');
+    console.log('👨‍🎨 Список мастеров:');
+    MASTERS.forEach(m => console.log(`  - ${m.name} (${m.category})`));
+    console.log('🔄 Автообновление каждые 3 секунды');
+    console.log('📋 Мастер может добавить от 1 до 100 вариантов времени');
+</script>
+
+</body>
+</html>
