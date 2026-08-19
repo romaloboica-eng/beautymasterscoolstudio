@@ -324,6 +324,9 @@
             content: "← ";
         }
 
+        /* ============================================
+           ЗАСТАВКА (SPLASH) С ЛОГОТИПОМ
+           ============================================ */
         #splash {
             justify-content: center;
             align-items: center;
@@ -333,14 +336,18 @@
         }
 
         #splash .logo {
-            font-size: 80px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
             margin-bottom: 16px;
             display: block;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            user-select: none;
-            text-shadow: 0 0 60px rgba(255, 255, 255, 0.05);
+            margin-left: auto;
+            margin-right: auto;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.05);
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         #splash .logo:active {
@@ -368,6 +375,58 @@
             text-transform: uppercase;
         }
 
+        /* ============================================
+           ФОТО САЛОНА
+           ============================================ */
+        .salon-photo {
+            border-radius: 20px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+            margin: 8px 0;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .salon-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .salon-photo .no-photo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ============================================
+           АВАТАРКИ МАСТЕРОВ
+           ============================================ */
+        .master-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            margin: 0 auto 8px;
+            display: block;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ============================================
+           ОСТАЛЬНЫЕ СТИЛИ
+           ============================================ */
         #offlineScreen {
             justify-content: center;
             align-items: center;
@@ -659,21 +718,6 @@
             }
         }
 
-        .salon-photo {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 14px;
-            margin: 8px 0;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
         .loading-spinner {
             width: 30px;
             height: 30px;
@@ -715,6 +759,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
         .master-card:active {
@@ -734,13 +779,54 @@
         }
 
         .master-card .master-category {
-            font-size: 14px;
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.3);
+            margin-top: 2px;
         }
 
-        .master-card .master-rating {
+        .master-card .master-rating-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 4px;
+        }
+
+        .master-card .rating-stars {
+            display: inline-flex;
+            gap: 1px;
             color: #c8b464;
-            font-size: 14px;
+            font-size: 13px;
+        }
+
+        .master-card .rating-stars .star-empty {
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        .master-card .rating-stars .star-full {
+            color: #c8b464;
+        }
+
+        .master-card .rating-stars .star-half {
+            color: #c8b464;
+            position: relative;
+        }
+
+        .master-card .rating-stars .star-half::after {
+            content: '★';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50%;
+            overflow: hidden;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        .master-card .rating-value {
+            font-weight: 600;
+            color: #e8e8e8;
         }
 
         .master-grid {
@@ -1082,10 +1168,11 @@
 <div class="app" id="app">
 
     <!-- ==========================================
-    ЭКРАН 1: ЗАСТАВКА (SPLASH)
+    ЭКРАН 1: ЗАСТАВКА (SPLASH) С ЛОГОТИПОМ
     ========================================== -->
     <div id="splash" class="screen active">
-        <span class="logo" id="splashLogo" onclick="handleAdminClick()">◈</span>
+        <img class="logo" id="splashLogo" src="logo.jpg" alt="Beauty Master Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="logo-placeholder" style="display:none;">◈</div>
         <h1><strong>Beauty</strong> Master Studio</h1>
         <div class="sub">профессиональный уход</div>
     </div>
@@ -1170,7 +1257,7 @@
     </div>
 
     <!-- ==========================================
-    ЭКРАН 4: ЛИЧНЫЙ КАБИНЕТ КЛИЕНТА
+    ЭКРАН 4: ЛИЧНЫЙ КАБИНЕТ КЛИЕНТА (С ФОТО САЛОНА)
     ========================================== -->
     <div id="clientDashboard" class="screen">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
@@ -1189,7 +1276,11 @@
             <span id="clientSyncCount" style="margin-left: auto; font-size: 11px;"></span>
         </div>
         
-        <div class="salon-photo mb-2"></div>
+        <!-- ФОТО САЛОНА -->
+        <div class="salon-photo mb-2">
+            <img src="salon.jpg" alt="Салон красоты" onerror="this.style.display='none'; this.parentElement.querySelector('.no-photo').style.display='flex';">
+            <div class="no-photo" style="display:none;">📸 Фото салона</div>
+        </div>
 
         <!-- Админ-панель -->
         <div id="adminPanel" class="admin-panel hidden">
@@ -1382,7 +1473,7 @@
     </div>
 
     <!-- ==========================================
-    ЭКРАН 10: ВЫБОР МАСТЕРА (СПИСОК ПО КАТЕГОРИЯМ)
+    ЭКРАН 10: ВЫБОР МАСТЕРА (С АВАТАРКАМИ)
     ========================================== -->
     <div id="masterSelect" class="screen">
         <span class="back-link" onclick="goToMasterLogin()">Назад</span>
@@ -1521,7 +1612,7 @@ try {
 }
 
 // ============================================================
-// 1. ДАННЫЕ
+// 1. ДАННЫЕ С ФОТОГРАФИЯМИ
 // ============================================================
 var SERVICES = {
     'Ногтевой сервис': [
@@ -1538,35 +1629,47 @@ var SERVICES = {
         { name: 'Наращивание ресниц (классика)', price: 2500 },
         { name: 'Наращивание ресниц (2D/3D)', price: 3500 }
     ],
-    'Волосы': [
-        { name: 'Женская стрижка', price: 2500 },
-        { name: 'Мужская стрижка', price: 1800 },
-        { name: 'Детская стрижка', price: 1500 },
-        { name: 'Окрашивание (тонирование)', price: 3000 },
-        { name: 'Балаяж', price: 4500 },
-        { name: 'Ботокс для волос', price: 3500 }
-    ],
     'Макияж': [
         { name: 'Дневной макияж', price: 2000 },
         { name: 'Вечерний макияж', price: 3000 },
         { name: 'Свадебный макияж', price: 5000 },
         { name: 'Макияж + прическа', price: 6000 }
-    ],
-    'Косметология': [
-        { name: 'Чистка лица', price: 2500 },
-        { name: 'Уходовая маска', price: 1500 },
-        { name: 'Массаж лица', price: 2000 },
-        { name: 'Лазерная эпиляция (зона)', price: 3000 },
-        { name: 'Био-ревитализация', price: 4500 }
     ]
 };
 
 var MASTERS = [
-    { id: 'm1', name: 'Алина', category: 'Ногтевой сервис', rating: 4.9, code: '0403' },
-    { id: 'm2', name: 'Екатерина', category: 'Брови/Ресницы', rating: 4.8, code: '0403' },
-    { id: 'm3', name: 'Марина', category: 'Волосы', rating: 4.7, code: '0403' },
-    { id: 'm4', name: 'Ольга', category: 'Макияж', rating: 4.9, code: '0403' },
-    { id: 'm5', name: 'Светлана', category: 'Косметология', rating: 4.6, code: '0403' }
+    { 
+        id: 'm1', 
+        name: 'Оксана', 
+        category: 'Ногтевой сервис', 
+        rating: 4.9, 
+        code: '7567',
+        photo: 'avatar_oksana.jpg' 
+    },
+    { 
+        id: 'm2', 
+        name: 'Наталья', 
+        category: 'Брови/Ресницы', 
+        rating: 4.8, 
+        code: '1952',
+        photo: 'avatar_natalya.jpg'
+    },
+    { 
+        id: 'm3', 
+        name: 'Татьяна', 
+        category: 'Брови/Ресницы', 
+        rating: 4.7, 
+        code: '1347',
+        photo: 'avatar_tatyana.jpg'
+    },
+    { 
+        id: 'm4', 
+        name: 'Ольга', 
+        category: 'Макияж', 
+        rating: 4.9, 
+        code: '0403',
+        photo: 'avatar_olga.jpg'
+    }
 ];
 
 // ============================================================
@@ -1598,7 +1701,204 @@ var adminClickCount = 0;
 var isMaintenance = false;
 
 // ============================================================
-// 3. АДМИН-ФУНКЦИИ
+// 3. ФУНКЦИИ ДЛЯ РЕЙТИНГА
+// ============================================================
+function getMasterRating(masterId) {
+    for (var i = 0; i < MASTERS.length; i++) {
+        if (MASTERS[i].id === masterId) {
+            return MASTERS[i].rating || 0;
+        }
+    }
+    return 0;
+}
+
+function updateMasterRating(masterId, newRating) {
+    for (var i = 0; i < MASTERS.length; i++) {
+        if (MASTERS[i].id === masterId) {
+            var oldRating = MASTERS[i].rating || 0;
+            MASTERS[i].rating = Math.round(((oldRating * 1) + newRating) / 2 * 10) / 10;
+            if (MASTERS[i].rating > 5) MASTERS[i].rating = 5;
+            return MASTERS[i].rating;
+        }
+    }
+    return 0;
+}
+
+function getClientRating(clientId) {
+    for (var i = 0; i < localUsers.length; i++) {
+        if (localUsers[i].id === clientId) {
+            return localUsers[i].rating || 0;
+        }
+    }
+    return 0;
+}
+
+function updateClientRating(clientId, newRating) {
+    for (var i = 0; i < localUsers.length; i++) {
+        if (localUsers[i].id === clientId) {
+            var oldRating = localUsers[i].rating || 0;
+            localUsers[i].rating = Math.round(((oldRating * 1) + newRating) / 2 * 10) / 10;
+            if (localUsers[i].rating > 5) localUsers[i].rating = 5;
+            saveLocalData();
+            return localUsers[i].rating;
+        }
+    }
+    return 0;
+}
+
+function renderStars(rating) {
+    var full = Math.floor(rating);
+    var half = rating % 1 >= 0.5 ? 1 : 0;
+    var empty = 5 - full - half;
+    var html = '';
+    for (var i = 0; i < full; i++) {
+        html += '<span class="star-full">★</span>';
+    }
+    if (half) {
+        html += '<span class="star-half">★</span>';
+    }
+    for (var i = 0; i < empty; i++) {
+        html += '<span class="star-empty">★</span>';
+    }
+    return html;
+}
+
+// ============================================================
+// 4. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// ============================================================
+function showScreen(id) {
+    var screens = document.querySelectorAll('.screen');
+    for (var i = 0; i < screens.length; i++) {
+        screens[i].classList.remove('active');
+    }
+    var el = document.getElementById(id);
+    if (el) el.classList.add('active');
+}
+
+function getStatusText(status) {
+    var map = {
+        'waiting': 'Ожидает мастера',
+        'accepted': 'Принята мастером',
+        'active': 'Подтверждена клиентом',
+        'completed': 'Завершена',
+        'declined': 'Отменена',
+        'waiting_time': 'Выберите время'
+    };
+    return map[status] || status;
+}
+
+function getStatusBadge(status) {
+    var map = {
+        'waiting': '<span class="status-badge status-waiting">Ожидает</span>',
+        'accepted': '<span class="status-badge status-active">Активна</span>',
+        'active': '<span class="status-badge status-active">Подтверждена</span>',
+        'completed': '<span class="status-badge status-completed">Завершена</span>',
+        'declined': '<span class="status-badge status-declined">Отменена</span>',
+        'waiting_time': '<span class="status-badge status-waiting_time">Выбор времени</span>'
+    };
+    return map[status] || map['waiting'];
+}
+
+function formatDate(timestamp) {
+    if (!timestamp) return '—';
+    var d = new Date(timestamp);
+    return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function getTimeAgo(timestamp) {
+    if (!timestamp) return 'только что';
+    var now = Date.now();
+    var diff = Math.floor((now - timestamp) / 1000);
+    if (diff < 60) return diff + ' сек назад';
+    if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
+    if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад';
+    return Math.floor(diff / 86400) + ' дн назад';
+}
+
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
+}
+
+function saveLocalData() {
+    localStorage.setItem('bms_entries', JSON.stringify(localEntries));
+    localStorage.setItem('bms_users', JSON.stringify(localUsers));
+}
+
+function showToast(message) {
+    var toast = document.createElement('div');
+    toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); color: #e8e8e8; padding: 14px 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; max-width: 360px; text-align: center; z-index: 9999; animation: fadeUp 0.4s ease;';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.4s';
+        setTimeout(function() { toast.remove(); }, 400);
+    }, 3000);
+}
+
+// ============================================================
+// 5. НАВИГАЦИЯ
+// ============================================================
+function goToRole() {
+    if (isMaintenance) {
+        showMaintenanceScreen();
+        return;
+    }
+    showScreen('roleSelect');
+}
+
+function goToClientLogin() {
+    if (isMaintenance) {
+        showMaintenanceScreen();
+        return;
+    }
+    showScreen('clientLogin');
+    document.getElementById('clientLoginStatus').textContent = 'Введите данные для входа';
+    document.getElementById('clientLoginStatus').className = 'text-muted';
+}
+
+function goToMasterLogin() {
+    if (isMaintenance) {
+        showMaintenanceScreen();
+        return;
+    }
+    showScreen('masterLogin');
+    document.getElementById('masterLoginStatus').textContent = 'Введите код доступа';
+    document.getElementById('masterLoginStatus').className = 'text-muted';
+}
+
+function goToMasterSelect() {
+    if (isMaintenance) {
+        showMaintenanceScreen();
+        return;
+    }
+    showScreen('masterSelect');
+    renderMasterList();
+}
+
+function goToClientDashboard() {
+    if (isMaintenance) {
+        showMaintenanceScreen();
+        return;
+    }
+    showScreen('clientDashboard');
+    loadClientEntries();
+    updateClientStatus();
+    if (isAdmin) updateAdminStats();
+}
+
+function goToMasterDashboard() {
+    if (isMaintenance) {
+        showMaintenanceScreen();
+        return;
+    }
+    showScreen('masterDashboard');
+    loadMasterEntries();
+}
+
+// ============================================================
+// 6. АДМИН-ФУНКЦИИ
 // ============================================================
 function handleAdminClick() {
     adminClickCount++;
@@ -1685,197 +1985,7 @@ function adminRefresh() {
 }
 
 // ============================================================
-// 4. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-// ============================================================
-function showScreen(id) {
-    var screens = document.querySelectorAll('.screen');
-    for (var i = 0; i < screens.length; i++) {
-        screens[i].classList.remove('active');
-    }
-    var el = document.getElementById(id);
-    if (el) el.classList.add('active');
-}
-
-function getStatusText(status) {
-    var map = {
-        'waiting': 'Ожидает мастера',
-        'accepted': 'Принята мастером',
-        'active': 'Подтверждена клиентом',
-        'completed': 'Завершена',
-        'declined': 'Отменена',
-        'waiting_time': 'Выберите время'
-    };
-    return map[status] || status;
-}
-
-function getStatusBadge(status) {
-    var map = {
-        'waiting': '<span class="status-badge status-waiting">Ожидает</span>',
-        'accepted': '<span class="status-badge status-active">Активна</span>',
-        'active': '<span class="status-badge status-active">Подтверждена</span>',
-        'completed': '<span class="status-badge status-completed">Завершена</span>',
-        'declined': '<span class="status-badge status-declined">Отменена</span>',
-        'waiting_time': '<span class="status-badge status-waiting_time">Выбор времени</span>'
-    };
-    return map[status] || map['waiting'];
-}
-
-function formatDate(timestamp) {
-    if (!timestamp) return '—';
-    var d = new Date(timestamp);
-    return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
-
-function getTimeAgo(timestamp) {
-    if (!timestamp) return 'только что';
-    var now = Date.now();
-    var diff = Math.floor((now - timestamp) / 1000);
-    if (diff < 60) return diff + ' сек назад';
-    if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
-    if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад';
-    return Math.floor(diff / 86400) + ' дн назад';
-}
-
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
-}
-
-function saveLocalData() {
-    localStorage.setItem('bms_entries', JSON.stringify(localEntries));
-    localStorage.setItem('bms_users', JSON.stringify(localUsers));
-}
-
-// ============================================================
-// 5. ОФЛАЙН-РЕЖИМ И СИНХРОНИЗАЦИЯ
-// ============================================================
-function checkOnlineStatus() {
-    var wasOffline = isOffline;
-    isOffline = !navigator.onLine;
-    
-    if (isOffline && !offlineScreenShown) {
-        offlineScreenShown = true;
-        showOfflineScreen();
-    }
-    
-    if (!isOffline && wasOffline) {
-        offlineScreenShown = false;
-        syncPendingData();
-    }
-}
-
-function showOfflineScreen() {
-    var currentScreen = document.querySelector('.screen.active');
-    if (currentScreen) {
-        currentScreen.dataset.previousScreen = currentScreen.id;
-    }
-    showScreen('offlineScreen');
-}
-
-function closeOfflineScreen() {
-    var previousScreen = document.querySelector('[data-previous-screen]');
-    if (previousScreen) {
-        showScreen(previousScreen.id);
-    } else {
-        showScreen('roleSelect');
-    }
-}
-
-function syncPendingData() {
-    var pending = JSON.parse(localStorage.getItem('bms_pending_sync') || '[]');
-    if (pending.length === 0) return;
-    
-    console.log('Синхронизация ' + pending.length + ' заявок...');
-    localStorage.removeItem('bms_pending_sync');
-    showToast('Синхронизировано ' + pending.length + ' заявок');
-}
-
-function saveEntryWithSync(entry) {
-    localEntries.push(entry);
-    saveLocalData();
-    
-    if (isOffline) {
-        var pending = JSON.parse(localStorage.getItem('bms_pending_sync') || '[]');
-        pending.push(entry);
-        localStorage.setItem('bms_pending_sync', JSON.stringify(pending));
-        showToast('Заявка сохранена локально. Отправится при появлении интернета.');
-    }
-}
-
-function showToast(message) {
-    var toast = document.createElement('div');
-    toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); color: #e8e8e8; padding: 14px 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; max-width: 360px; text-align: center; z-index: 9999; animation: fadeUp 0.4s ease;';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    setTimeout(function() {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.4s';
-        setTimeout(function() { toast.remove(); }, 400);
-    }, 3000);
-}
-
-// ============================================================
-// 6. НАВИГАЦИЯ
-// ============================================================
-function goToRole() {
-    if (isMaintenance) {
-        showMaintenanceScreen();
-        return;
-    }
-    showScreen('roleSelect');
-}
-
-function goToClientLogin() {
-    if (isMaintenance) {
-        showMaintenanceScreen();
-        return;
-    }
-    showScreen('clientLogin');
-    document.getElementById('clientLoginStatus').textContent = 'Введите данные для входа';
-    document.getElementById('clientLoginStatus').className = 'text-muted';
-}
-
-function goToMasterLogin() {
-    if (isMaintenance) {
-        showMaintenanceScreen();
-        return;
-    }
-    showScreen('masterLogin');
-    document.getElementById('masterLoginStatus').textContent = 'Введите код доступа';
-    document.getElementById('masterLoginStatus').className = 'text-muted';
-}
-
-function goToMasterSelect() {
-    if (isMaintenance) {
-        showMaintenanceScreen();
-        return;
-    }
-    showScreen('masterSelect');
-    renderMasterList();
-}
-
-function goToClientDashboard() {
-    if (isMaintenance) {
-        showMaintenanceScreen();
-        return;
-    }
-    showScreen('clientDashboard');
-    loadClientEntries();
-    updateClientStatus();
-    if (isAdmin) updateAdminStats();
-}
-
-function goToMasterDashboard() {
-    if (isMaintenance) {
-        showMaintenanceScreen();
-        return;
-    }
-    showScreen('masterDashboard');
-    loadMasterEntries();
-}
-
-// ============================================================
-// 7. СТАТУС ОНЛАЙН/ОФЛАЙН ДЛЯ КЛИЕНТА
+// 7. СТАТУС ОНЛАЙН/ОФЛАЙН
 // ============================================================
 function updateClientStatus() {
     var statusBar = document.getElementById('clientStatusBar');
@@ -1899,7 +2009,7 @@ function updateClientStatus() {
 }
 
 // ============================================================
-// 8. АВТОРИЗАЦИЯ КЛИЕНТА
+// 8. АВТОРИЗАЦИЯ КЛИЕНТА (Firebase + офлайн)
 // ============================================================
 async function clientAuth() {
     var name = document.getElementById('clientName').value.trim();
@@ -1928,7 +2038,6 @@ async function clientAuth() {
         var user = null;
         var userCred = null;
 
-        // Пробуем Firebase
         if (useFirebase && auth) {
             try {
                 userCred = await auth.signInWithEmailAndPassword(email, password);
@@ -1955,7 +2064,6 @@ async function clientAuth() {
                 currentClientData = { name: name, phone: phone, email: email, uid: currentUser.uid, rating: 0 };
             }
         } else {
-            // Офлайн-режим
             for (var i = 0; i < localUsers.length; i++) {
                 if (localUsers[i].email === email && localUsers[i].password === password) {
                     user = localUsers[i];
@@ -1996,7 +2104,7 @@ async function clientAuth() {
 }
 
 // ============================================================
-// 9. ЗАГРУЗКА ЗАПИСЕЙ КЛИЕНТА (С СОРТИРОВКОЙ И УДАЛЕНИЕМ)
+// 9. ЗАГРУЗКА ЗАПИСЕЙ КЛИЕНТА
 // ============================================================
 function loadClientEntries() {
     var container = document.getElementById('clientEntriesList');
@@ -2005,16 +2113,14 @@ function loadClientEntries() {
         return;
     }
 
-    var entries = [];
     var clientId = currentUser.uid || currentUser.id;
-    
+    var entries = [];
     for (var i = 0; i < localEntries.length; i++) {
         if (localEntries[i].clientId === clientId) {
             entries.push(localEntries[i]);
         }
     }
     
-    // СОРТИРОВКА: новые сверху, старые снизу
     entries.sort(function(a, b) {
         return b.createdAt - a.createdAt;
     });
@@ -2029,6 +2135,7 @@ function loadClientEntries() {
         var e = entries[j];
         var showTimeSelectBtn = (e.status === 'waiting_time' && e.timeSlots && e.timeSlots.length > 0);
         var isCompleted = (e.status === 'completed');
+        var masterRating = e.masterId ? getMasterRating(e.masterId) : 0;
         
         html += '<div class="entry-item">';
         html += '<div class="entry-title" onclick="showClientEntryDetail(\'' + e.id + '\')">' + (e.service || 'Услуга') + ' — ' + (e.price || 0) + ' ₽</div>';
@@ -2040,12 +2147,14 @@ function loadClientEntries() {
         html += e.createdAt ? ' · ' + getTimeAgo(e.createdAt) : '';
         html += '</div>';
         
-        // Кнопка "Выбрать время" для заявок в статусе waiting_time
+        if (e.masterId) {
+            html += '<div class="entry-meta" style="margin-top: 2px;">Рейтинг мастера: <span class="rating-stars">' + renderStars(masterRating) + '</span> ' + masterRating.toFixed(1) + '</div>';
+        }
+        
         if (showTimeSelectBtn) {
             html += '<div class="entry-actions"><button class="btn btn-sm btn-success" onclick="event.stopPropagation(); showTimeSelect(\'' + e.id + '\')">Выбрать время (' + e.timeSlots.length + ' вариантов)</button></div>';
         }
         
-        // Кнопка "Удалить" для завершенных заявок
         if (isCompleted) {
             html += '<div class="entry-actions"><button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); deleteCompletedEntry(\'' + e.id + '\')">🗑 Удалить</button></div>';
         }
@@ -2058,7 +2167,7 @@ function loadClientEntries() {
 }
 
 // ============================================================
-// 9.5. УДАЛЕНИЕ ЗАВЕРШЕННОЙ ЗАЯВКИ
+// 10. УДАЛЕНИЕ ЗАВЕРШЕННОЙ ЗАЯВКИ
 // ============================================================
 function deleteCompletedEntry(entryId) {
     if (!confirm('Вы уверены, что хотите удалить эту завершенную запись?')) return;
@@ -2081,7 +2190,7 @@ function deleteCompletedEntry(entryId) {
 }
 
 // ============================================================
-// 10. ДЕТАЛИ ЗАЯВКИ ДЛЯ КЛИЕНТА
+// 11. ДЕТАЛИ ЗАЯВКИ ДЛЯ КЛИЕНТА
 // ============================================================
 function showClientEntryDetail(entryId) {
     var entry = null;
@@ -2105,6 +2214,9 @@ function showClientEntryDetail(entryId) {
         }
         timeSlotsHtml += '</div>';
     }
+    
+    var masterRating = entry.masterId ? getMasterRating(entry.masterId) : 0;
+    var clientRating = entry.clientId ? getClientRating(entry.clientId) : 0;
 
     container.innerHTML = 
         '<div style="margin-bottom: 12px; text-align: center;"><span class="status-badge ' + (entry.status === 'waiting' ? 'status-waiting' : entry.status === 'active' ? 'status-active' : entry.status === 'completed' ? 'status-completed' : entry.status === 'declined' ? 'status-declined' : 'status-waiting_time') + '">' + getStatusText(entry.status) + '</span></div>' +
@@ -2113,6 +2225,8 @@ function showClientEntryDetail(entryId) {
         '<div class="detail-row"><span class="detail-label">Категория</span><span class="detail-value">' + (entry.category || '—') + '</span></div>' +
         '<div class="detail-row"><span class="detail-label">Пожелание</span><span class="detail-value">' + (entry.wishDate || 'Не указано') + '</span></div>' +
         '<div class="detail-row"><span class="detail-label">Мастер</span><span class="detail-value master">' + (entry.masterName || 'Не назначен') + '</span></div>' +
+        (entry.masterId ? '<div class="detail-row"><span class="detail-label">Рейтинг мастера</span><span class="detail-value"><span class="rating-stars">' + renderStars(masterRating) + '</span> ' + masterRating.toFixed(1) + '</span></div>' : '') +
+        (entry.clientId ? '<div class="detail-row"><span class="detail-label">Ваш рейтинг</span><span class="detail-value"><span class="rating-stars">' + renderStars(clientRating) + '</span> ' + clientRating.toFixed(1) + '</span></div>' : '') +
         '<div class="detail-row"><span class="detail-label">Выбранное время</span><span class="detail-value">' + (entry.clientSelectedTime ? formatDate(entry.clientSelectedTime) : 'Не выбрано') + '</span></div>' +
         timeSlotsHtml +
         '<div class="detail-row"><span class="detail-label">Создана</span><span class="detail-value">' + (entry.createdAt ? formatDate(entry.createdAt) : '—') + '</span></div>' +
@@ -2125,7 +2239,7 @@ function showClientEntryDetail(entryId) {
 }
 
 // ============================================================
-// 11. ПОКАЗ УСЛУГ
+// 12. ПОКАЗ УСЛУГ
 // ============================================================
 function showServices() {
     if (isMaintenance) {
@@ -2180,7 +2294,7 @@ function selectService(idx) {
 }
 
 // ============================================================
-// 12. ПОДТВЕРЖДЕНИЕ ЗАПИСИ
+// 13. ПОДТВЕРЖДЕНИЕ ЗАПИСИ
 // ============================================================
 function confirmService() {
     if (isMaintenance) {
@@ -2238,14 +2352,23 @@ function confirmService() {
         synced: !isOffline
     };
 
-    saveEntryWithSync(entry);
+    localEntries.push(entry);
+    saveLocalData();
+    
+    if (isOffline) {
+        var pending = JSON.parse(localStorage.getItem('bms_pending_sync') || '[]');
+        pending.push(entry);
+        localStorage.setItem('bms_pending_sync', JSON.stringify(pending));
+        showToast('Заявка сохранена локально. Отправится при появлении интернета.');
+    }
+    
     waitingEntryId = entry.id;
     showWaitingScreen(entry.id);
     if (isAdmin) updateAdminStats();
 }
 
 // ============================================================
-// 13. ЭКРАН ОЖИДАНИЯ
+// 14. ЭКРАН ОЖИДАНИЯ
 // ============================================================
 function showWaitingScreen(entryId) {
     if (isMaintenance) {
@@ -2263,47 +2386,97 @@ function showWaitingScreen(entryId) {
         document.getElementById('waitingTimer').textContent = seconds;
     }, 1000);
 
-    var checkInterval = setInterval(function() {
-        var entry = null;
-        for (var i = 0; i < localEntries.length; i++) {
-            if (localEntries[i].id === entryId) {
-                entry = localEntries[i];
-                break;
-            }
-        }
-        if (!entry) return;
-
-        if (entry.status === 'waiting_time' && entry.timeSlots && entry.timeSlots.length > 0) {
-            clearInterval(checkInterval);
+    var isOfflineMode = !navigator.onLine || !useFirebase;
+    if (isOfflineMode) {
+        setTimeout(function() {
             clearInterval(waitingTimerInterval);
             
-            document.getElementById('waitingStatus').innerHTML = '<p style="color: #8aba9a;">Мастер предложил варианты времени!</p><p class="text-muted">' + (entry.masterName || 'Мастер') + ' предложил ' + entry.timeSlots.length + ' вариантов</p>';
+            var entry = null;
+            for (var i = 0; i < localEntries.length; i++) {
+                if (localEntries[i].id === entryId) {
+                    entry = localEntries[i];
+                    break;
+                }
+            }
+            if (!entry) return;
+            
+            var master = null;
+            for (var j = 0; j < MASTERS.length; j++) {
+                if (MASTERS[j].category === entry.category) {
+                    master = MASTERS[j];
+                    break;
+                }
+            }
+            if (!master) master = MASTERS[0];
+            
+            var timeSlots = [];
+            var now = Date.now();
+            for (var k = 1; k <= 5; k++) {
+                timeSlots.push(now + k * 3600000 + Math.floor(Math.random() * 1800000));
+            }
+            timeSlots.sort(function(a, b) { return a - b; });
+            
+            entry.masterId = master.id;
+            entry.masterName = master.name;
+            entry.status = 'waiting_time';
+            entry.timeSlots = timeSlots;
+            saveLocalData();
+            
+            document.getElementById('waitingStatus').innerHTML = 
+                '<p style="color: #8aba9a;">✅ Мастер ' + master.name + ' ответил!</p>' +
+                '<p class="text-muted">Предложено ' + timeSlots.length + ' вариантов времени</p>';
             
             currentEntryId = entryId;
             setTimeout(function() { showTimeSelect(entryId); }, 1500);
-        } 
-        else if (entry.status === 'accepted' || entry.status === 'active') {
-            clearInterval(checkInterval);
-            clearInterval(waitingTimerInterval);
-            
-            document.getElementById('waitingStatus').innerHTML = '<p style="color: #8aba9a;">Мастер принял заявку!</p><p class="text-muted">' + (entry.masterName || 'Мастер') + ' назначил время: ' + (entry.masterTime ? formatDate(entry.masterTime) : 'уточняется') + '</p>';
-            
-            if (entry.masterTime) {
+        }, 5000);
+    } else {
+        var checkInterval = setInterval(function() {
+            var entry = null;
+            for (var i = 0; i < localEntries.length; i++) {
+                if (localEntries[i].id === entryId) {
+                    entry = localEntries[i];
+                    break;
+                }
+            }
+            if (!entry) return;
+
+            if (entry.status === 'waiting_time' && entry.timeSlots && entry.timeSlots.length > 0) {
+                clearInterval(checkInterval);
+                clearInterval(waitingTimerInterval);
+                
+                document.getElementById('waitingStatus').innerHTML = 
+                    '<p style="color: #8aba9a;">Мастер предложил варианты времени!</p>' +
+                    '<p class="text-muted">' + (entry.masterName || 'Мастер') + ' предложил ' + entry.timeSlots.length + ' вариантов</p>';
+                
                 currentEntryId = entryId;
                 setTimeout(function() { showTimeSelect(entryId); }, 1500);
+            } 
+            else if (entry.status === 'accepted' || entry.status === 'active') {
+                clearInterval(checkInterval);
+                clearInterval(waitingTimerInterval);
+                
+                document.getElementById('waitingStatus').innerHTML = 
+                    '<p style="color: #8aba9a;">Мастер принял заявку!</p>' +
+                    '<p class="text-muted">' + (entry.masterName || 'Мастер') + ' назначил время: ' + (entry.masterTime ? formatDate(entry.masterTime) : 'уточняется') + '</p>';
+                
+                if (entry.masterTime) {
+                    currentEntryId = entryId;
+                    setTimeout(function() { showTimeSelect(entryId); }, 1500);
+                }
+            } 
+            else if (entry.status === 'declined') {
+                clearInterval(checkInterval);
+                clearInterval(waitingTimerInterval);
+                document.getElementById('waitingStatus').innerHTML = 
+                    '<p style="color: #ba8a8a;">Заявка отменена</p>';
+                setTimeout(function() { goToClientDashboard(); }, 2000);
             }
-        } 
-        else if (entry.status === 'declined') {
-            clearInterval(checkInterval);
-            clearInterval(waitingTimerInterval);
-            document.getElementById('waitingStatus').innerHTML = '<p style="color: #ba8a8a;">Заявка отменена</p>';
-            setTimeout(function() { goToClientDashboard(); }, 2000);
-        }
-    }, 2000);
+        }, 2000);
+    }
 }
 
 // ============================================================
-// 14. ВЫБОР ВРЕМЕНИ (КЛИЕНТ)
+// 15. ВЫБОР ВРЕМЕНИ (КЛИЕНТ)
 // ============================================================
 function showTimeSelect(entryId) {
     if (isMaintenance) {
@@ -2459,7 +2632,7 @@ function cancelWaiting() {
 }
 
 // ============================================================
-// 15. ФИНАЛЬНЫЙ ТАЙМЕР
+// 16. ФИНАЛЬНЫЙ ТАЙМЕР
 // ============================================================
 function showFinalTimer() {
     showScreen('finalTimerScreen');
@@ -2478,7 +2651,7 @@ function showFinalTimer() {
 
         if (seconds <= 0) {
             clearInterval(finalTimerInterval);
-            showThanksScreen(currentEntryId);
+            goToClientDashboard();
         }
     }, 1000);
 }
@@ -2489,7 +2662,7 @@ function forceGoHome() {
 }
 
 // ============================================================
-// 16. БЛАГОДАРНОСТЬ С ОТЗЫВАМИ (КЛИЕНТ)
+// 17. БЛАГОДАРНОСТЬ С ОТЗЫВАМИ (КЛИЕНТ)
 // ============================================================
 function showThanksScreen(entryId) {
     thanksEntryId = entryId;
@@ -2525,9 +2698,11 @@ function rateMaster(rating) {
             break;
         }
     }
-    if (entry) {
+    if (entry && entry.masterId) {
+        var newRating = updateMasterRating(entry.masterId, rating);
         entry.clientRating = rating;
         saveLocalData();
+        showToast('⭐ Рейтинг мастера обновлён: ' + newRating.toFixed(1));
     }
 }
 
@@ -2540,7 +2715,7 @@ function open2GIS() {
 }
 
 // ============================================================
-// 17. АВТОРИЗАЦИЯ МАСТЕРА
+// 18. АВТОРИЗАЦИЯ МАСТЕРА
 // ============================================================
 function masterAuth() {
     if (isMaintenance) {
@@ -2573,7 +2748,7 @@ function masterAuth() {
 }
 
 // ============================================================
-// 18. СПИСОК МАСТЕРОВ ПО КАТЕГОРИЯМ
+// 19. СПИСОК МАСТЕРОВ С АВАТАРКАМИ И РЕЙТИНГОМ
 // ============================================================
 function renderMasterList() {
     var container = document.getElementById('masterList');
@@ -2591,10 +2766,22 @@ function renderMasterList() {
         html += '<div style="grid-column: 1 / -1; margin-top: 8px; font-weight: 600; color: #e8e8e8; font-size: 14px;">' + cat + '</div>';
         for (var j = 0; j < masters.length; j++) {
             var m = masters[j];
-            var stars = '';
-            for (var s = 0; s < Math.floor(m.rating); s++) stars += '★';
-            if (m.rating % 1 >= 0.5) stars += '★';
-            html += '<div class="master-card" onclick="selectMaster(\'' + m.id + '\')"><div class="master-name">' + m.name + '</div><div class="master-rating">' + stars + ' ' + m.rating + '</div><div style="margin-top: 6px;"><button class="btn btn-sm btn-success" onclick="event.stopPropagation(); enterMaster(\'' + m.id + '\')">Войти</button></div></div>';
+            var rating = m.rating || 0;
+            var stars = renderStars(rating);
+            var photoHtml = m.photo ? 
+                '<img class="master-avatar" src="' + m.photo + '" alt="' + m.name + '" onerror="this.style.display=\'none\'; this.parentElement.querySelector(\'.master-avatar-placeholder\').style.display=\'flex\';">' :
+                '<div class="master-avatar-placeholder">👤</div>';
+            
+            html += '<div class="master-card" onclick="selectMaster(\'' + m.id + '\')">';
+            html += photoHtml;
+            html += '<div class="master-name">' + m.name + '</div>';
+            html += '<div class="master-category">' + m.category + '</div>';
+            html += '<div class="master-rating-display">';
+            html += '<span class="rating-stars">' + stars + '</span>';
+            html += '<span class="rating-value">' + rating.toFixed(1) + '</span>';
+            html += '</div>';
+            html += '<div style="margin-top: 6px;"><button class="btn btn-sm btn-success" onclick="event.stopPropagation(); enterMaster(\'' + m.id + '\')">Войти</button></div>';
+            html += '</div>';
         }
     }
     container.innerHTML = html;
@@ -2643,7 +2830,7 @@ function enterMaster(masterId) {
 }
 
 // ============================================================
-// 19. КАБИНЕТ МАСТЕРА
+// 20. КАБИНЕТ МАСТЕРА
 // ============================================================
 function loadMasterEntries() {
     if (isMaintenance) {
@@ -2691,10 +2878,17 @@ function loadMasterEntries() {
     for (var m = 0; m < filtered.length; m++) {
         var e = filtered[m];
         var isMy = e.masterId === masterId;
+        var clientRating = e.clientId ? getClientRating(e.clientId) : 0;
+        
         html += '<div class="entry-item" onclick="showMasterEntryDetail(\'' + e.id + '\')" style="' + (isMy ? 'border-left-color: rgba(80,200,120,0.2);' : '') + '">';
         html += '<div class="entry-title">' + (e.clientName || 'Клиент') + ' — ' + (e.service || 'Услуга') + '</div>';
         html += '<div class="entry-meta">' + getStatusBadge(e.status) + (e.masterName ? '· ' + e.masterName : '· Ожидает мастера') + '</div>';
         html += '<div class="entry-meta">' + (e.wishDate || 'без пожеланий') + (e.createdAt ? ' · ' + getTimeAgo(e.createdAt) : '') + '</div>';
+        
+        if (e.clientId) {
+            html += '<div class="entry-meta" style="margin-top: 2px;">Рейтинг клиента: <span class="rating-stars">' + renderStars(clientRating) + '</span> ' + clientRating.toFixed(1) + '</div>';
+        }
+        
         html += '<div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">';
 
         if (e.status === 'waiting' && !e.masterId) {
@@ -2716,7 +2910,7 @@ function loadMasterEntries() {
 }
 
 // ============================================================
-// 20. ДЕТАЛИ ЗАЯВКИ ДЛЯ МАСТЕРА
+// 21. ДЕТАЛИ ЗАЯВКИ ДЛЯ МАСТЕРА
 // ============================================================
 function showMasterEntryDetail(entryId) {
     var entry = null;
@@ -2740,6 +2934,9 @@ function showMasterEntryDetail(entryId) {
         }
         timeSlotsHtml += '</div>';
     }
+    
+    var clientRating = entry.clientId ? getClientRating(entry.clientId) : 0;
+    var masterRating = entry.masterId ? getMasterRating(entry.masterId) : 0;
 
     container.innerHTML = 
         '<div style="margin-bottom: 12px; text-align: center;"><span class="status-badge ' + (entry.status === 'waiting' ? 'status-waiting' : entry.status === 'active' ? 'status-active' : entry.status === 'completed' ? 'status-completed' : entry.status === 'declined' ? 'status-declined' : 'status-waiting_time') + '">' + getStatusText(entry.status) + '</span></div>' +
@@ -2750,6 +2947,8 @@ function showMasterEntryDetail(entryId) {
         '<div class="detail-row"><span class="detail-label">Категория</span><span class="detail-value">' + (entry.category || '—') + '</span></div>' +
         '<div class="detail-row"><span class="detail-label">Пожелание клиента</span><span class="detail-value">' + (entry.wishDate || 'Не указано') + '</span></div>' +
         '<div class="detail-row"><span class="detail-label">Мастер</span><span class="detail-value master">' + (entry.masterName || 'Не назначен') + '</span></div>' +
+        (entry.clientId ? '<div class="detail-row"><span class="detail-label">Рейтинг клиента</span><span class="detail-value"><span class="rating-stars">' + renderStars(clientRating) + '</span> ' + clientRating.toFixed(1) + '</span></div>' : '') +
+        (entry.masterId ? '<div class="detail-row"><span class="detail-label">Ваш рейтинг</span><span class="detail-value"><span class="rating-stars">' + renderStars(masterRating) + '</span> ' + masterRating.toFixed(1) + '</span></div>' : '') +
         '<div class="detail-row"><span class="detail-label">Выбранное клиентом</span><span class="detail-value">' + (entry.clientSelectedTime ? formatDate(entry.clientSelectedTime) : 'Не выбрано') + '</span></div>' +
         timeSlotsHtml +
         '<div class="detail-row"><span class="detail-label">Заявка создана</span><span class="detail-value">' + (entry.createdAt ? formatDate(entry.createdAt) : '—') + '</span></div>' +
@@ -2771,7 +2970,7 @@ function showMasterTab(tab) {
 }
 
 // ============================================================
-// 21. МАСТЕР ПРИНИМАЕТ ЗАЯВКУ
+// 22. МАСТЕР ПРИНИМАЕТ ЗАЯВКУ
 // ============================================================
 function acceptEntry(entryId) {
     var masterId = currentMasterData.id;
@@ -2797,7 +2996,7 @@ function acceptEntry(entryId) {
 }
 
 // ============================================================
-// 22. МАСТЕР ВЫБИРАЕТ ВРЕМЯ (1-100 ВАРИАНТОВ)
+// 23. МАСТЕР ВЫБИРАЕТ ВРЕМЯ (1-100 ВАРИАНТОВ)
 // ============================================================
 function openTimePicker(entryId) {
     masterTimeEntryId = entryId;
@@ -2920,7 +3119,7 @@ function cancelMasterTimes() {
 }
 
 // ============================================================
-// 23. ЗАВЕРШЕНИЕ ЗАПИСИ (МАСТЕР)
+// 24. ЗАВЕРШЕНИЕ ЗАПИСИ (МАСТЕР)
 // ============================================================
 function completeEntry(entryId) {
     if (!confirm('Завершить запись? Клиент сможет оставить отзыв')) return;
@@ -2936,13 +3135,14 @@ function completeEntry(entryId) {
         entry.completedAt = Date.now();
         saveLocalData();
         
+        showThanksScreen(entryId);
         showMasterRating(entryId);
         if (isAdmin) updateAdminStats();
     }
 }
 
 // ============================================================
-// 24. ОЦЕНКА КЛИЕНТА (МАСТЕР)
+// 25. ОЦЕНКА КЛИЕНТА (МАСТЕР)
 // ============================================================
 function showMasterRating(entryId) {
     masterRatingEntryId = entryId;
@@ -2996,17 +3196,18 @@ function saveMasterRating() {
             break;
         }
     }
-    if (entry) {
+    if (entry && entry.clientId) {
+        var newRating = updateClientRating(entry.clientId, masterRating);
         entry.masterRating = masterRating;
         saveLocalData();
+        alert('⭐ Рейтинг клиента обновлён: ' + newRating.toFixed(1));
     }
     
-    alert('Оценка сохранена!');
     goToMasterDashboard();
 }
 
 // ============================================================
-// 25. ВЫХОД
+// 26. ВЫХОД
 // ============================================================
 function logout() {
     currentUser = null;
@@ -3018,18 +3219,58 @@ function logout() {
 }
 
 // ============================================================
-// 26. ЗАПУСК И АВТООБНОВЛЕНИЕ
+// 27. ЗАПУСК И АВТООБНОВЛЕНИЕ
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Добавляем CSS для анимации toast
     var style = document.createElement('style');
     style.textContent = '@keyframes fadeUp { 0% { opacity: 0; transform: translateX(-50%) translateY(20px); } 100% { opacity: 1; transform: translateX(-50%) translateY(0); } }';
     document.head.appendChild(style);
     
-    // Проверяем статус интернета
+    function checkOnlineStatus() {
+        var wasOffline = isOffline;
+        isOffline = !navigator.onLine;
+        
+        if (isOffline && !offlineScreenShown) {
+            offlineScreenShown = true;
+            showOfflineScreen();
+        }
+        
+        if (!isOffline && wasOffline) {
+            offlineScreenShown = false;
+            syncPendingData();
+        }
+    }
+    
+    function syncPendingData() {
+        var pending = JSON.parse(localStorage.getItem('bms_pending_sync') || '[]');
+        if (pending.length === 0) return;
+        console.log('Синхронизация ' + pending.length + ' заявок...');
+        localStorage.removeItem('bms_pending_sync');
+        showToast('Синхронизировано ' + pending.length + ' заявок');
+    }
+    
+    function showOfflineScreen() {
+        var currentScreen = document.querySelector('.screen.active');
+        if (currentScreen) {
+            currentScreen.dataset.previousScreen = currentScreen.id;
+        }
+        showScreen('offlineScreen');
+    }
+    
+    function closeOfflineScreen() {
+        var previousScreen = document.querySelector('[data-previous-screen]');
+        if (previousScreen) {
+            showScreen(previousScreen.id);
+        } else {
+            showScreen('roleSelect');
+        }
+    }
+    
+    window.closeOfflineScreen = closeOfflineScreen;
+    window.checkOnlineStatus = checkOnlineStatus;
+    
     checkOnlineStatus();
     
-    // Слушаем изменения статуса интернета
     window.addEventListener('online', function() {
         checkOnlineStatus();
         updateClientStatus();
@@ -3039,7 +3280,13 @@ document.addEventListener('DOMContentLoaded', function() {
         updateClientStatus();
     });
     
-    // Автообновление каждые 3 секунды
+    // Проверяем автовход
+    setTimeout(function() {
+        if (document.getElementById('splash').classList.contains('active')) {
+            goToRole();
+        }
+    }, 5000);
+    
     setInterval(function() {
         localEntries = JSON.parse(localStorage.getItem('bms_entries') || '[]');
         localUsers = JSON.parse(localStorage.getItem('bms_users') || '[]');
@@ -3086,28 +3333,18 @@ document.addEventListener('DOMContentLoaded', function() {
             syncPendingData();
         }
     }, 3000);
-
-    setTimeout(function() {
-        if (document.getElementById('splash').classList.contains('active')) {
-            goToRole();
-        }
-    }, 5000);
 });
 
 console.log('💄 Beauty Master Studio запущен!');
-console.log('🔥 Режим: ' + (useFirebase ? 'ONLINE (Firebase)' : 'OFFLINE (локальные данные)'));
-console.log('🔑 Код мастера: 0403');
-console.log('📧 Введите ЛЮБОЙ email и пароль (мин. 6 символов)');
-console.log('👨‍🎨 Список мастеров:');
+console.log('🔑 Коды мастеров:');
 for (var i = 0; i < MASTERS.length; i++) {
-    console.log('  - ' + MASTERS[i].name + ' (' + MASTERS[i].category + ')');
+    console.log('  - ' + MASTERS[i].name + ': ' + MASTERS[i].code + ' (' + MASTERS[i].category + ')');
 }
+console.log('⭐ Рейтинг обновляется автоматически при оценках');
 console.log('🔄 Автообновление каждые 3 секунды');
-console.log('📋 Мастер может добавить от 1 до 100 вариантов времени');
-console.log('🗑 Клиент может удалять завершенные заявки');
-console.log('📊 Сортировка: новые сверху, старые снизу');
 console.log('👑 Администратор: логин "test", пароль "admin" (3 нажатия на логотип)');
+console.log('📸 Фото: logo.jpg, salon.jpg, avatar_*.jpg');
 </script>
 
 </body>
-    </html>
+</html>
