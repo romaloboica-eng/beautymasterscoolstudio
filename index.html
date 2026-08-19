@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Beauty Master Studio</title>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         /* ============================================
            СТЕКЛЯННЫЙ СТИЛЬ (GLASSMORPHISM)
            С ПЛАВНО МЕНЯЮЩИМСЯ ФОНОМ
            ============================================ */
         
-        /* Анимация фона */
         @keyframes gradientBG {
             0% { background: radial-gradient(ellipse at 20% 50%, #1a1a2e, #16213e, #0f0f1a); }
             25% { background: radial-gradient(ellipse at 60% 30%, #1a1a3e, #1a1a2e, #0d0d1a); }
@@ -56,7 +60,6 @@
             flex-direction: column;
         }
 
-        /* Стеклянные блики */
         .app::before {
             content: '';
             position: absolute;
@@ -105,9 +108,6 @@
         .screen::-webkit-scrollbar { width: 0; }
         .screen::-webkit-scrollbar-track { display: none; }
 
-        /* ============================================
-           СТЕКЛЯННЫЕ КОМПОНЕНТЫ
-           ============================================ */
         .btn {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
@@ -324,9 +324,6 @@
             content: "← ";
         }
 
-        /* ============================================
-           ЗАСТАВКА (SPLASH)
-           ============================================ */
         #splash {
             justify-content: center;
             align-items: center;
@@ -371,9 +368,6 @@
             text-transform: uppercase;
         }
 
-        /* ============================================
-           ОФЛАЙН-УВЕДОМЛЕНИЕ
-           ============================================ */
         #offlineScreen {
             justify-content: center;
             align-items: center;
@@ -433,9 +427,6 @@
             border: 1px solid rgba(200, 180, 80, 0.1);
         }
 
-        /* ============================================
-           ТЕХНИЧЕСКИЕ РАБОТЫ
-           ============================================ */
         #maintenanceScreen {
             justify-content: center;
             align-items: center;
@@ -463,9 +454,6 @@
             max-width: 280px;
         }
 
-        /* ============================================
-           ВЫБОР РОЛИ
-           ============================================ */
         #roleSelect {
             justify-content: center;
             padding: 40px 22px;
@@ -515,9 +503,6 @@
             color: #e8e8e8;
         }
 
-        /* ============================================
-           УСЛУГИ
-           ============================================ */
         .service-category {
             cursor: pointer;
             transition: all 0.3s ease;
@@ -551,9 +536,6 @@
         .service-item .name { font-weight: 500; color: #e8e8e8; }
         .service-item .price { font-weight: 600; color: rgba(255, 255, 255, 0.6); }
 
-        /* ============================================
-           ТАЙМЕР-КОЛЕСИКО
-           ============================================ */
         .timer-ring {
             width: 80px;
             height: 80px;
@@ -586,9 +568,6 @@
             transform: rotate(0deg);
         }
 
-        /* ============================================
-           ЗАПИСИ
-           ============================================ */
         .entry-item {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(10px);
@@ -598,24 +577,28 @@
             margin: 8px 0;
             border-left: 3px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            cursor: pointer;
             transition: all 0.3s ease;
-        }
-
-        .entry-item:active {
-            transform: scale(0.97);
-            opacity: 0.7;
         }
 
         .entry-item .entry-title {
             font-weight: 600;
             color: #e8e8e8;
+            cursor: pointer;
+        }
+
+        .entry-item .entry-title:active {
+            opacity: 0.6;
         }
 
         .entry-item .entry-meta {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.4);
             margin-top: 4px;
+            cursor: pointer;
+        }
+
+        .entry-item .entry-meta:active {
+            opacity: 0.6;
         }
 
         .entry-item .status-badge {
@@ -633,9 +616,19 @@
         .status-declined { background: rgba(200, 80, 80, 0.08); color: #ba8a8a; border-color: rgba(200, 80, 80, 0.1); }
         .status-waiting_time { background: rgba(200, 180, 80, 0.08); color: #c8b464; border-color: rgba(200, 180, 80, 0.1); }
 
-        /* ============================================
-           ВКЛАДКИ МАСТЕРА
-           ============================================ */
+        .entry-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .entry-actions .btn-sm {
+            font-size: 11px;
+            padding: 6px 12px;
+            width: auto;
+        }
+
         .tab-btn {
             padding: 10px 16px;
             border: none;
@@ -657,9 +650,6 @@
             opacity: 0.6;
         }
 
-        /* ============================================
-           АДАПТИВ
-           ============================================ */
         @media (max-width: 440px) {
             body { padding: 0; }
             .app {
@@ -927,7 +917,6 @@
             100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        /* Стили для офлайн-статуса */
         .status-bar {
             display: flex;
             align-items: center;
@@ -982,7 +971,6 @@
             100% { opacity: 1; }
         }
 
-        /* Админ-панель */
         .admin-panel {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(15px);
@@ -1077,6 +1065,15 @@
         .admin-actions .btn-sm {
             font-size: 11px;
             padding: 6px 12px;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        .clickable:active {
+            transform: scale(0.97);
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -1233,7 +1230,7 @@
         </div>
         
         <div class="card" style="flex: 1;">
-            <div class="card-title">Мои записи <span style="font-size: 12px; color: rgba(255,255,255,0.2); font-weight: 400;">(нажмите для просмотра)</span></div>
+            <div class="card-title">Мои записи <span style="font-size: 12px; color: rgba(255,255,255,0.2); font-weight: 400;">(нажмите для деталей)</span></div>
             <div id="clientEntriesList">
                 <p class="text-muted">У вас пока нет записей</p>
             </div>
@@ -1495,6 +1492,34 @@
 </div>
 
 <script>
+// ============================================================
+// 0. FIREBASE КОНФИГУРАЦИЯ
+// ============================================================
+var firebaseConfig = {
+    apiKey: "AIzaSyBVGJhe896ZYywSIxxSjoIl1CmzSlfNvxs",
+    authDomain: "bmsalon-coool.firebaseapp.com",
+    projectId: "bmsalon-coool",
+    storageBucket: "bmsalon-coool.firebasestorage.app",
+    messagingSenderId: "752918742529",
+    appId: "1:752918742529:web:df19b6ffd9a07715ed6200"
+};
+
+// Инициализация Firebase
+var useFirebase = false;
+var auth = null;
+var db = null;
+
+try {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    useFirebase = true;
+    console.log('✅ Firebase подключен!');
+} catch (e) {
+    console.warn('⚠️ Firebase не подключен, работаем офлайн');
+    useFirebase = false;
+}
+
 // ============================================================
 // 1. ДАННЫЕ
 // ============================================================
@@ -1876,7 +1901,7 @@ function updateClientStatus() {
 // ============================================================
 // 8. АВТОРИЗАЦИЯ КЛИЕНТА
 // ============================================================
-function clientAuth() {
+async function clientAuth() {
     var name = document.getElementById('clientName').value.trim();
     var phone = document.getElementById('clientPhone').value.trim();
     var email = document.getElementById('clientEmail').value.trim();
@@ -1901,29 +1926,60 @@ function clientAuth() {
 
     try {
         var user = null;
-        for (var i = 0; i < localUsers.length; i++) {
-            if (localUsers[i].email === email && localUsers[i].password === password) {
-                user = localUsers[i];
-                break;
-            }
-        }
-        if (!user) {
-            user = {
-                id: generateId(),
-                name: name,
-                phone: phone,
-                email: email,
-                password: password,
-                rating: 0,
-                createdAt: Date.now()
-            };
-            localUsers.push(user);
-            saveLocalData();
-        }
-        currentUser = user;
-        currentClientData = user;
+        var userCred = null;
 
-        document.getElementById('clientNameDisplay').textContent = user.name;
+        // Пробуем Firebase
+        if (useFirebase && auth) {
+            try {
+                userCred = await auth.signInWithEmailAndPassword(email, password);
+            } catch (e) {
+                if (e.code === 'auth/user-not-found') {
+                    userCred = await auth.createUserWithEmailAndPassword(email, password);
+                    await db.collection('users').doc(userCred.user.uid).set({
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        rating: 0,
+                        createdAt: new Date().toISOString()
+                    });
+                } else {
+                    throw e;
+                }
+            }
+            currentUser = userCred.user;
+            var doc = await db.collection('users').doc(currentUser.uid).get();
+            if (doc.exists) {
+                currentClientData = doc.data();
+                currentClientData.uid = currentUser.uid;
+            } else {
+                currentClientData = { name: name, phone: phone, email: email, uid: currentUser.uid, rating: 0 };
+            }
+        } else {
+            // Офлайн-режим
+            for (var i = 0; i < localUsers.length; i++) {
+                if (localUsers[i].email === email && localUsers[i].password === password) {
+                    user = localUsers[i];
+                    break;
+                }
+            }
+            if (!user) {
+                user = {
+                    id: generateId(),
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    password: password,
+                    rating: 0,
+                    createdAt: Date.now()
+                };
+                localUsers.push(user);
+                saveLocalData();
+            }
+            currentUser = user;
+            currentClientData = user;
+        }
+
+        document.getElementById('clientNameDisplay').textContent = currentClientData.name;
         statusEl.textContent = 'Вход выполнен!';
         statusEl.className = 'success-message';
         
@@ -1940,7 +1996,7 @@ function clientAuth() {
 }
 
 // ============================================================
-// 9. ЗАГРУЗКА ЗАПИСЕЙ КЛИЕНТА
+// 9. ЗАГРУЗКА ЗАПИСЕЙ КЛИЕНТА (С СОРТИРОВКОЙ И УДАЛЕНИЕМ)
 // ============================================================
 function loadClientEntries() {
     var container = document.getElementById('clientEntriesList');
@@ -1950,11 +2006,18 @@ function loadClientEntries() {
     }
 
     var entries = [];
+    var clientId = currentUser.uid || currentUser.id;
+    
     for (var i = 0; i < localEntries.length; i++) {
-        if (localEntries[i].clientId === currentUser.id) {
+        if (localEntries[i].clientId === clientId) {
             entries.push(localEntries[i]);
         }
     }
+    
+    // СОРТИРОВКА: новые сверху, старые снизу
+    entries.sort(function(a, b) {
+        return b.createdAt - a.createdAt;
+    });
     
     if (entries.length === 0) {
         container.innerHTML = '<p class="text-muted">У вас пока нет записей</p>';
@@ -1965,24 +2028,56 @@ function loadClientEntries() {
     for (var j = 0; j < entries.length; j++) {
         var e = entries[j];
         var showTimeSelectBtn = (e.status === 'waiting_time' && e.timeSlots && e.timeSlots.length > 0);
+        var isCompleted = (e.status === 'completed');
         
-        html += '<div class="entry-item" onclick="showClientEntryDetail(\'' + e.id + '\')">';
-        html += '<div class="entry-title">' + (e.service || 'Услуга') + ' — ' + (e.price || 0) + ' ₽</div>';
-        html += '<div class="entry-meta">' + getStatusBadge(e.status || 'waiting');
+        html += '<div class="entry-item">';
+        html += '<div class="entry-title" onclick="showClientEntryDetail(\'' + e.id + '\')">' + (e.service || 'Услуга') + ' — ' + (e.price || 0) + ' ₽</div>';
+        html += '<div class="entry-meta" onclick="showClientEntryDetail(\'' + e.id + '\')">' + getStatusBadge(e.status || 'waiting');
         html += e.masterName ? ' · ' + e.masterName : '';
         html += '</div>';
-        html += '<div class="entry-meta">';
+        html += '<div class="entry-meta" onclick="showClientEntryDetail(\'' + e.id + '\')">';
         html += e.clientSelectedTime ? formatDate(e.clientSelectedTime) : (e.masterTime ? formatDate(e.masterTime) : (e.wishDate || 'время не указано'));
         html += e.createdAt ? ' · ' + getTimeAgo(e.createdAt) : '';
         html += '</div>';
+        
+        // Кнопка "Выбрать время" для заявок в статусе waiting_time
         if (showTimeSelectBtn) {
-            html += '<div style="margin-top: 8px;"><button class="btn btn-sm btn-success" onclick="event.stopPropagation(); showTimeSelect(\'' + e.id + '\')" style="width: 100%;">Выбрать время (' + e.timeSlots.length + ' вариантов)</button></div>';
+            html += '<div class="entry-actions"><button class="btn btn-sm btn-success" onclick="event.stopPropagation(); showTimeSelect(\'' + e.id + '\')">Выбрать время (' + e.timeSlots.length + ' вариантов)</button></div>';
         }
-        html += '<div style="margin-top: 4px; font-size: 12px; color: rgba(255,255,255,0.2);">Нажмите для деталей</div>';
+        
+        // Кнопка "Удалить" для завершенных заявок
+        if (isCompleted) {
+            html += '<div class="entry-actions"><button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); deleteCompletedEntry(\'' + e.id + '\')">🗑 Удалить</button></div>';
+        }
+        
+        html += '<div style="margin-top: 4px; font-size: 12px; color: rgba(255,255,255,0.2);" onclick="showClientEntryDetail(\'' + e.id + '\')">Нажмите для деталей</div>';
         html += '</div>';
     }
 
     container.innerHTML = html;
+}
+
+// ============================================================
+// 9.5. УДАЛЕНИЕ ЗАВЕРШЕННОЙ ЗАЯВКИ
+// ============================================================
+function deleteCompletedEntry(entryId) {
+    if (!confirm('Вы уверены, что хотите удалить эту завершенную запись?')) return;
+    
+    var index = -1;
+    for (var i = 0; i < localEntries.length; i++) {
+        if (localEntries[i].id === entryId) {
+            index = i;
+            break;
+        }
+    }
+    
+    if (index !== -1) {
+        localEntries.splice(index, 1);
+        saveLocalData();
+        loadClientEntries();
+        if (isAdmin) updateAdminStats();
+        showToast('Запись удалена');
+    }
 }
 
 // ============================================================
@@ -2104,7 +2199,7 @@ function confirmService() {
     }
 
     var wishDate = document.getElementById('wishDate').value.trim() || 'Не указано';
-    var clientId = currentUser.id;
+    var clientId = currentUser.uid || currentUser.id;
     var clientName = currentClientData.name || 'Клиент';
     var clientPhone = currentClientData.phone || '';
 
@@ -2999,18 +3094,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000);
 });
 
-console.log('Beauty Master Studio запущен!');
-console.log('Код мастера: 0403');
-console.log('Введите ЛЮБОЙ email и пароль (мин. 6 символов)');
-console.log('Список мастеров:');
+console.log('💄 Beauty Master Studio запущен!');
+console.log('🔥 Режим: ' + (useFirebase ? 'ONLINE (Firebase)' : 'OFFLINE (локальные данные)'));
+console.log('🔑 Код мастера: 0403');
+console.log('📧 Введите ЛЮБОЙ email и пароль (мин. 6 символов)');
+console.log('👨‍🎨 Список мастеров:');
 for (var i = 0; i < MASTERS.length; i++) {
     console.log('  - ' + MASTERS[i].name + ' (' + MASTERS[i].category + ')');
 }
-console.log('Автообновление каждые 3 секунды');
-console.log('Мастер может добавить от 1 до 100 вариантов времени');
-console.log('Офлайн-режим: заявки сохраняются локально и синхронизируются при появлении интернета');
-console.log('Администратор: логин "test", пароль "admin" (3 нажатия на логотип)');
+console.log('🔄 Автообновление каждые 3 секунды');
+console.log('📋 Мастер может добавить от 1 до 100 вариантов времени');
+console.log('🗑 Клиент может удалять завершенные заявки');
+console.log('📊 Сортировка: новые сверху, старые снизу');
+console.log('👑 Администратор: логин "test", пароль "admin" (3 нажатия на логотип)');
 </script>
 
 </body>
-</html>
+    </html>
